@@ -1,6 +1,6 @@
 
 <script lang="ts">
-	import { acts } from '@tadashi/svelte-notification';
+	import { editedPost } from './../../../lib/modules/editPost';
 	import { isAdmin } from './../../../lib/modules/isAdmin';
 	import { PageModule } from '$lib/modules/pageModule';
 import {Server} from '../../../lib/modules/firebase';
@@ -26,20 +26,39 @@ import {Server} from '../../../lib/modules/firebase';
 	const deletePost=()=>{
 		Server.deletePost(data.id).then(e=>{
 			if(e){
-				acts.add({message:`successfully deleted`, mode:'success', lifetime:5 });
+				//acts.add({message:`successfully deleted`, mode:'success', lifetime:5 });
 				goto(`/posts/`);
 			}
 			else{
-				acts.add({message:`failed deleting`, mode:'danger', lifetime:5 });
+				//acts.add({message:`failed deleting`, mode:'danger', lifetime:5 });
 			}
 		})
 	}
+
+	const editPost=()=>{
+		editedPost.set(data.id);
+		goto(`/new/`);
+	}
 </script>
 
-<h1>
+<div id="title">
     {title}
-</h1>
+</div>
 {@html PageModule.view(desc)}
 {#if adminable}
 	<button on:click = {deletePost}>delete</button>
+	<button on:click = {editPost}>edit</button>
 {/if}
+
+<style lang="scss">
+	@import './../../../lib/scss/variable.scss';
+	#title{
+		margin:-10px;
+		margin-bottom: 10px;
+		background-color: $black-color;
+		color:white;
+		font-size: 40px;
+		padding: 10px;
+		font-weight: bold;
+	}
+</style>

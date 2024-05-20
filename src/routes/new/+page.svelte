@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { editedPost } from './../../lib/modules/editPost';
 	import { PageModule } from '$lib/modules/pageModule';
   import { goto } from "$app/navigation";
   import { Server } from "$lib/modules/firebase";
@@ -8,14 +9,33 @@
     let title = '';
     let content = '';
     let uploadName = '';
+    let editId = ``;
+
+    if($editedPost!==''){
+        Server.getPost($editedPost).then(e=>{
+            title = e.title;
+            content = e.desc;
+            editId = $editedPost;
+
+            editedPost.set(``);
+        });
+    }
 
     Server.init();
 
     const handleSubmit=(event:Event)=>{
         event.preventDefault();
-        Server.addPost(title,content).then(e=>{
-            goto('/');
-        });
+
+        if(editId === ``){
+            Server.addPost(title,content).then(e=>{
+                goto('/');
+            });
+        }
+        else{
+            Server.editPost(title,content,editId).then(e=>{
+                goto('/');
+            });
+        }
     }
 
     const handleFileChange=(event:any)=>{

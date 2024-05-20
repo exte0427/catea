@@ -7,23 +7,6 @@
       "_internal.js"
     ]
   },
-  "_Notifications.js": {
-    "file": "chunks/Notifications.js",
-    "imports": [
-      "_ssr.js",
-      "_Notifications.svelte_svelte_type_style_lang.js",
-      "_acts.js"
-    ]
-  },
-  "_Notifications.svelte_svelte_type_style_lang.js": {
-    "file": "chunks/Notifications.svelte_svelte_type_style_lang.js",
-    "imports": [
-      "_index.js"
-    ],
-    "css": [
-      "_app/immutable/assets/Notifications.C_noNbb5.css"
-    ]
-  },
   "_Take.js": {
     "file": "chunks/Take.js",
     "imports": [
@@ -31,12 +14,6 @@
     ],
     "css": [
       "_app/immutable/assets/Take.D6pnBnA7.css"
-    ]
-  },
-  "_acts.js": {
-    "file": "chunks/acts.js",
-    "imports": [
-      "_Notifications.svelte_svelte_type_style_lang.js"
     ]
   },
   "_client.js": {
@@ -70,10 +47,20 @@
     ]
   },
   "_pageModule.js": {
-    "file": "chunks/pageModule.js"
+    "file": "chunks/pageModule.js",
+    "imports": [
+      "_client.js"
+    ]
   },
   "_ssr.js": {
     "file": "chunks/ssr.js"
+  },
+  "_stores.js": {
+    "file": "chunks/stores.js",
+    "imports": [
+      "_ssr.js",
+      "_client.js"
+    ]
   },
   "node_modules/@fontsource/fira-mono/files/fira-mono-all-400-normal.woff": {
     "file": "_app/immutable/assets/fira-mono-all-400-normal.B2mvLtSD.woff",
@@ -109,7 +96,7 @@
     "isEntry": true,
     "imports": [
       "_ssr.js",
-      "_client.js"
+      "_stores.js"
     ]
   },
   "node_modules/@sveltejs/kit/src/runtime/server/index.js": {
@@ -132,14 +119,13 @@
     "isEntry": true,
     "imports": [
       "_ssr.js",
-      "_Notifications.js",
-      "_Notifications.svelte_svelte_type_style_lang.js",
       "_isAdmin.js",
       "_client.js",
+      "_stores.js",
       "_pageModule.js"
     ],
     "css": [
-      "_app/immutable/assets/_layout.BbNoPaUu.css"
+      "_app/immutable/assets/_layout.CjaDg5OI.css"
     ],
     "assets": [
       "_app/immutable/assets/footer.Bm62diV9.png",
@@ -159,9 +145,7 @@
     "imports": [
       "_ssr.js",
       "_firebase.js",
-      "_Take.js",
-      "_Notifications.svelte_svelte_type_style_lang.js",
-      "_acts.js"
+      "_Take.js"
     ],
     "css": [
       "_app/immutable/assets/_page.DVKYMURz.css"
@@ -178,8 +162,6 @@
     "isEntry": true,
     "imports": [
       "_ssr.js",
-      "_Notifications.js",
-      "_Notifications.svelte_svelte_type_style_lang.js",
       "_firebase.js"
     ]
   },
@@ -201,6 +183,7 @@
     "isEntry": true,
     "imports": [
       "_ssr.js",
+      "_index.js",
       "_pageModule.js",
       "_client.js",
       "_firebase.js"
@@ -216,7 +199,7 @@
       "_firebase.js"
     ],
     "css": [
-      "_app/immutable/assets/_page.DD6wqVRk.css"
+      "_app/immutable/assets/_page.o7ci6Kru.css"
     ]
   },
   "src/routes/posts/[id]/+page.svelte": {
@@ -225,11 +208,13 @@
     "isEntry": true,
     "imports": [
       "_ssr.js",
-      "_Notifications.svelte_svelte_type_style_lang.js",
       "_isAdmin.js",
       "_pageModule.js",
       "_firebase.js",
       "_client.js"
+    ],
+    "css": [
+      "_app/immutable/assets/_page.CJSIQx3F.css"
     ]
   },
   "src/routes/posts/[id]/+page.ts": {

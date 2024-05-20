@@ -1,10 +1,6 @@
 <script lang="ts">
 	import { Server } from './../modules/firebase';
 	import Take from './Take.svelte';
-    import {Notifications, acts} from '@tadashi/svelte-notification'
-
-    acts.add({message:`this webpage doesn't support mobile device yet`, mode:'warn', lifetime:5 });
-    console.log(Server.isAdmin());
 </script>
 
 <div>
@@ -22,6 +18,7 @@
     <Take link="https://github.com/exte0427">github</Take>
 
     <h2>writings & video</h2>
-    <blockquote>not yet!</blockquote>
+    <Take link="https://www.youtube.com/channel/UCdywJSqTF7KGs-CWgen1qHA">youtube</Take>
+    <blockquote>writings are not yet!</blockquote>
 
 </div>

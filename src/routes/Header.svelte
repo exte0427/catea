@@ -14,10 +14,12 @@
 		catea
 	</div>
 	<div id="moveSector">
-		<Move to="/" name="main" />
-		<Move to="/posts/" name="posts" />
-		<Move to="/contact/" name="contact" />
-		<Move to="/admin/" name="admin" />
+		<ul>
+			<li><Move to="/" name="main" /></li>
+			<li><Move to="/posts/" name="posts" /></li>
+			<li><Move to="/contact/" name="contact" /></li>
+			<li><Move to="/admin/" name="admin" /></li>
+		</ul>
 
 		<!--for admin-->
 		{#if adminable}
@@ -26,7 +28,34 @@
 	</div>
 </header>
 
-<style>
+<style lang="scss">
+
+	@import './../lib/scss/responsive.scss';
+
+	@include mobile{
+		header{
+			width: 100%;			
+		}
+		ul{
+			text-align: center;
+		}
+		li{
+			display: inline-block;
+		}
+	}
+
+	@include desktop{
+		header{
+			position: fixed;
+			height: 100vh;
+			width: 200px;
+
+			top:0;
+			left:0;
+		}
+	
+	}
+
 	header {
 		display: flex;
 		justify-content: space-between;
@@ -36,15 +65,8 @@
 		background-color: #ebe5df;
 		padding:10px;
 
-		position: fixed;
-		height: 100vh;
-		width: 200px;
-
 		margin: 0;
 		padding: 0;
-
-		top:0;
-		left:0;
 	}
 
 	#moveSector{

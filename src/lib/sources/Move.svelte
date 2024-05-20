@@ -1,17 +1,24 @@
 <script lang="ts" >
   import { goto } from "$app/navigation";
+  import { page } from "$app/stores";
   import { PageModule } from "$lib/modules/pageModule";
 
     export let to:string = "/";
     export let name:string = "main";
 
+    let originTriggered = false;
+    let triggered=false;
+
+    $: originTriggered=$page.url.pathname.split("/")[1] === to.split("/")[1];
+    $: triggered = originTriggered;
     const move=()=>{
         goto(to);
     }
 </script>
 
 <div id="main">
-    <button id="inner" on:click={move}>
+    <button class="inner" on:click={move} class:inner__selected={triggered}
+    on:mouseenter={()=>{triggered=true}} on:mouseleave={()=>{triggered=originTriggered}}>
         {name}
     </button>
 </div>
@@ -34,17 +41,14 @@
     $inner_border_radius: 5px;
     $trigger: false;
 
-    #inner{
-        margin: 5px;
+    .inner{
         padding: 10px;
         width: 100%;
         height: 100%;
 
-        border-color: #2b2b2b;
-        border-width: 2px;
-        border-radius: $inner_border_radius;
-        border-style: solid;
+        border: 0;
 
+        background-color: transparent;
         color : #2b2b2b;
         font-size:20px;
 
@@ -61,7 +65,6 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #fff;
             z-index: -2;
         }
         &:before {
@@ -75,9 +78,10 @@
             transition: all .3s;
             z-index: -1;
         }
-        &:hover {
+
+        &__selected{
             $trigger: true;
-            @include triggered;
+        @include triggered;
         }
     }
 </style>

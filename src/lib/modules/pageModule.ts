@@ -1,9 +1,7 @@
 import { marked } from "marked";
+import { page } from '$app/stores';
 
 export namespace PageModule{
-    export const getPage=(index:number)=>{
-        return window.location.pathname.split("/")[index-1];
-    }
 
     export const view=(text:string)=>{
         return marked(text);

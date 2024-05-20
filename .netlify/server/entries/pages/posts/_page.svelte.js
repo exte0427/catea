@@ -2,7 +2,7 @@ import { c as create_ssr_component, e as escape, d as each, v as validate_compon
 import "../../../chunks/client.js";
 import "../../../chunks/firebase.js";
 const css = {
-  code: "#inner.svelte-10nglpo{border-width:0px;width:100%;background-color:white;margin-bottom:10px;padding:10px}",
+  code: "#inner.svelte-1yrqaas{border-width:0px;width:100%;background-color:white;margin-bottom:10px;padding:10px;cursor:pointer}",
   map: null
 };
 const PostCard = create_ssr_component(($$result, $$props, $$bindings, slots) => {
@@ -10,7 +10,7 @@ const PostCard = create_ssr_component(($$result, $$props, $$bindings, slots) => 
   if ($$props.postData === void 0 && $$bindings.postData && postData !== void 0)
     $$bindings.postData(postData);
   $$result.css.add(css);
-  return `<button id="inner" class="svelte-10nglpo"><h2>${escape(postData.title)}</h2> ${escape(postData.desc)} </button>`;
+  return `<button id="inner" class="svelte-1yrqaas"><h2>${escape(postData.title)}</h2> ${escape(postData.desc)} </button>`;
 });
 const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let posts = [];

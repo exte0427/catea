@@ -1,6 +1,6 @@
 import {initializeApp} from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { addDoc, collection, deleteDoc, doc, endAt, getFirestore, onSnapshot, setDoc } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, endAt, getFirestore, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -64,6 +64,19 @@ export namespace Server{
         const db = getFirestore();
 
         addDoc(collection(db,"posts"),{
+            title: title,
+            desc: desc,
+            date: date
+        }).then(()=>{
+            resolve(true);
+        });
+    });
+
+    export const editPost=(title:string, desc:string,postId:string)=> new Promise((resolve,reject)=>{
+        const date = new Date(); // 현재 시간을 ISO 형식의 문자열로 변환
+        const db = getFirestore();
+
+        updateDoc(doc(getFirestore(),"posts",postId),{
             title: title,
             desc: desc,
             date: date

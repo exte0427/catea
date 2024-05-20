@@ -9,12 +9,27 @@
     <img src={footer} alt="">
 </div>
 
-<style>
+<style lang="scss">
+
+    @import './../lib/scss/responsive.scss';
+
+    @include mobile{
+        #container{
+            text-align: center;
+            justify-content: center;
+        }
+
+        #text{
+            position:absolute;
+        }
+    }
+
     #container{
         display: flex;
         background-color: #2b2b2b;
         width: 100%;
         height: 200px;
+        min-height: 200px;
         color:white;
 
         font-size: 20px;
@@ -22,6 +37,8 @@
 
         justify-content: center;
         align-items: center;
+        overflow: hidden;
+
     }
 
     #text{

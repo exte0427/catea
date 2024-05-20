@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, collection, onSnapshot, doc, addDoc, deleteDoc } from "firebase/firestore";
+import { getFirestore, collection, onSnapshot, doc, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
 const firebaseConfig = {
@@ -55,6 +55,17 @@ var Server;
     const date = /* @__PURE__ */ new Date();
     const db = getFirestore();
     addDoc(collection(db, "posts"), {
+      title,
+      desc,
+      date
+    }).then(() => {
+      resolve(true);
+    });
+  });
+  Server2.editPost = (title, desc, postId) => new Promise((resolve, reject) => {
+    const date = /* @__PURE__ */ new Date();
+    getFirestore();
+    updateDoc(doc(getFirestore(), "posts", postId), {
       title,
       desc,
       date

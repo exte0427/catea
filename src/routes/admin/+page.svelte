@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { acts, Notifications } from '@tadashi/svelte-notification';
 	import { Server } from '$lib/modules/firebase';
   import { isAdmin } from '$lib/modules/isAdmin';
   
@@ -10,11 +9,12 @@
     const auth=()=>{
         Server.auth(id,password).then(e=>{
             if(e){
-                acts.add({message:`successfully logined as admin`, mode:'success', lifetime:5 });
+                //acts.add({message:`successfully logined as admin`, mode:'success', lifetime:5 });
                 isAdmin.set(true);
             }
             else
-                acts.add({message:`failed to login as admin`, mode:'danger', lifetime:5 });
+            ;
+                //acts.add({message:`failed to login as admin`, mode:'danger', lifetime:5 });
         });
     }
 </script>
@@ -27,5 +27,3 @@
     <input type="password" name="password" id="password" bind:value={password}>
     <input type="submit">
 </form>
-
-<Notifications />

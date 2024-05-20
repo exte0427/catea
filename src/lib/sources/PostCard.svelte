@@ -21,5 +21,7 @@
         background-color: white;
         margin-bottom: 10px;
         padding: 10px;
+
+        cursor: pointer;
     }
 </style>

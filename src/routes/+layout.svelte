@@ -1,8 +1,7 @@
 <script lang="ts">
-  import { Notifications } from '@tadashi/svelte-notification';
 	import Footer from './Footer.svelte';
 	import Header from './Header.svelte';
-	import './styles.css';
+	import './styles.scss';
 
 	
 </script>
@@ -17,18 +16,33 @@
 		
 		<Footer/>
 	</main>
-	<Notifications />
 </div>
 
-<style>
+<style lang="scss">
+	@import '../lib/scss/responsive.scss';
+
+	@include desktop{
+		main{
+			margin-left:200px;
+			height: 100vh;
+		}
+
+	}
+
+	@include mobile{
+		main{
+			height: calc(100vh - 100px);
+		}
+	}
 
 	main {
-		display: block;
-		margin-left:200px;
+		display: flex;
+		flex-direction: column;
+  		
 	}
 
 	#article{
 		margin: 10px;
-		min-height: calc(100vh - 200px);
+		flex:1;
 	}
 </style>
