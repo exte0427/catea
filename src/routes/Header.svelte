@@ -1,4 +1,5 @@
 <script>
+	import SubMove from './../lib/sources/SubMove.svelte';
 	import { isAdmin } from './../lib/modules/isAdmin';
   import Move from '$lib/sources/Move.svelte';
 
@@ -16,7 +17,8 @@
 	<div id="moveSector">
 		<ul>
 			<li><Move to="/" name="main" /></li>
-			<li><Move to="/posts/" name="posts" /></li>
+			<li><Move to="/posts/" name="posts" >
+			</Move></li>
 			<li><Move to="/contact/" name="contact" /></li>
 			<li><Move to="/admin/" name="admin" /></li>
 		</ul>

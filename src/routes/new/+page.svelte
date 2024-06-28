@@ -8,6 +8,7 @@
 
     let title = '';
     let content = '';
+    let category = '';
     let uploadName = '';
     let editId = ``;
 
@@ -15,6 +16,7 @@
         Server.getPost($editedPost).then(e=>{
             title = e.title;
             content = e.desc;
+            category=e.category;
             editId = $editedPost;
 
             editedPost.set(``);
@@ -27,12 +29,12 @@
         event.preventDefault();
 
         if(editId === ``){
-            Server.addPost(title,content).then(e=>{
+            Server.addPost(title,content,category).then(e=>{
                 goto('/');
             });
         }
         else{
-            Server.editPost(title,content,editId).then(e=>{
+            Server.editPost(title,content,category,editId).then(e=>{
                 goto('/');
             });
         }
@@ -51,8 +53,13 @@
 <form on:submit={handleSubmit}>
     <label for="title">Title:</label><br>
     <input type="text" id="title" bind:value={title}><br>
+
+    <label for="category">Category:</label><br>
+    <input type="text" id="category" bind:value={category}><br>
+
     <label for="content">Content:</label><br>
     <textarea id="content" bind:value={content}></textarea><br><br>
+
     <button type="submit">Submit</button>
 </form>
 
@@ -62,3 +69,15 @@
 
 <h1>preview</h1>
 {@html PageModule.view(content)}
+
+<style lang="scss">
+    #content{
+        width: 100%;
+        height: 300px;
+
+        margin: 10px;
+        border-radius: 5px;
+        border-width: 0px;
+        
+    }
+</style>

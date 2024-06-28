@@ -6,9 +6,10 @@
 import {Server} from '../../../lib/modules/firebase';
 	import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
+  import Loading from '$lib/sources/Loading.svelte';
 
 	export let data;
-    let title="",desc="";
+    let postData:Server.Post;
 	let adminable=false;
 
 	isAdmin.subscribe((value)=>{
@@ -18,8 +19,7 @@ import {Server} from '../../../lib/modules/firebase';
 	onMount(() => {
 		Server.init();
 		Server.getPost(data.id).then((e:Server.Post)=>{
-			title = e.title;
-            desc = e.desc;
+			postData=e;
 		});
 	});
 
@@ -41,15 +41,25 @@ import {Server} from '../../../lib/modules/firebase';
 	}
 </script>
 
-<div id="title">
-    {title}
-</div>
-{@html PageModule.view(desc)}
-{#if adminable}
-	<button on:click = {deletePost}>delete</button>
-	<button on:click = {editPost}>edit</button>
-{/if}
+{#if postData==null}
+<Loading></Loading>
 
+{:else}
+
+	<div id="title">
+		<div id="titleText">
+			{postData.title}
+		</div>
+		<div id="titleDate">
+			{PageModule.getDate(postData.date)}
+		</div>
+	</div>
+	{@html PageModule.view(postData.desc)}
+	{#if adminable}
+		<button on:click = {deletePost}>delete</button>
+		<button on:click = {editPost}>edit</button>
+	{/if}
+{/if}
 <style lang="scss">
 	@import './../../../lib/scss/variable.scss';
 	#title{
@@ -60,5 +70,15 @@ import {Server} from '../../../lib/modules/firebase';
 		font-size: 40px;
 		padding: 10px;
 		font-weight: bold;
+		display: flex;
+		text-align: center;
+
+		#titleDate{
+
+			display: flex;
+			font-size: 20px;
+			font-weight: normal;
+			align-items: center;
+		}
 	}
 </style>

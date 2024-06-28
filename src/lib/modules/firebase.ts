@@ -1,6 +1,6 @@
 import {initializeApp} from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { addDoc, collection, deleteDoc, doc, endAt, getFirestore, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, endAt, getFirestore, onSnapshot, setDoc, Timestamp, updateDoc } from 'firebase/firestore';
 import { getDownloadURL, getStorage, ref, uploadBytes } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -23,14 +23,18 @@ export namespace Server{
     export class Post{
         title:string;
         desc:string;
-        date:Date;
+        date:Timestamp;
         id:string;
+        like:number;
+        category:string;
         constructor(e:any){
             const data = e.data();
             this.title=data.title;
             this.desc=data.desc;
             this.date=data.date;
             this.id = e.id;
+            this.like = data.like;
+            this.category = data.category;
         }
 
     }
@@ -59,27 +63,31 @@ export namespace Server{
         });
     });
 
-    export const addPost=(title:string, desc:string)=> new Promise((resolve,reject)=>{
+    export const addPost=(title:string, desc:string,category:string)=> new Promise((resolve,reject)=>{
         const date = new Date(); // 현재 시간을 ISO 형식의 문자열로 변환
         const db = getFirestore();
 
         addDoc(collection(db,"posts"),{
             title: title,
             desc: desc,
-            date: date
+            date: date,
+            category: category,
+            like:0
         }).then(()=>{
             resolve(true);
         });
     });
 
-    export const editPost=(title:string, desc:string,postId:string)=> new Promise((resolve,reject)=>{
+    export const editPost=(title:string, desc:string,category:string,postId:string)=> new Promise((resolve,reject)=>{
         const date = new Date(); // 현재 시간을 ISO 형식의 문자열로 변환
         const db = getFirestore();
 
         updateDoc(doc(getFirestore(),"posts",postId),{
             title: title,
             desc: desc,
-            date: date
+            date: date,
+            category: category,
+            like:0
         }).then(()=>{
             resolve(true);
         });

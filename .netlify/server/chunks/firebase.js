@@ -22,12 +22,16 @@ var Server;
     desc;
     date;
     id;
+    like;
+    category;
     constructor(e) {
       const data = e.data();
       this.title = data.title;
       this.desc = data.desc;
       this.date = data.date;
       this.id = e.id;
+      this.like = data.like;
+      this.category = data.category;
     }
   }
   Server2.Post = Post;
@@ -51,24 +55,28 @@ var Server;
       resolve(new Post(snapshot));
     });
   });
-  Server2.addPost = (title, desc) => new Promise((resolve, reject) => {
+  Server2.addPost = (title, desc, category) => new Promise((resolve, reject) => {
     const date = /* @__PURE__ */ new Date();
     const db = getFirestore();
     addDoc(collection(db, "posts"), {
       title,
       desc,
-      date
+      date,
+      category,
+      like: 0
     }).then(() => {
       resolve(true);
     });
   });
-  Server2.editPost = (title, desc, postId) => new Promise((resolve, reject) => {
+  Server2.editPost = (title, desc, category, postId) => new Promise((resolve, reject) => {
     const date = /* @__PURE__ */ new Date();
     getFirestore();
     updateDoc(doc(getFirestore(), "posts", postId), {
       title,
       desc,
-      date
+      date,
+      category,
+      like: 0
     }).then(() => {
       resolve(true);
     });

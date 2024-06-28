@@ -2,6 +2,7 @@
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
   import { PageModule } from "$lib/modules/pageModule";
+  import { scale } from "svelte/transition";
 
     export let to:string = "/";
     export let name:string = "main";
@@ -20,6 +21,11 @@
     <button class="inner" on:click={move} class:inner__selected={triggered}
     on:mouseenter={()=>{triggered=true}} on:mouseleave={()=>{triggered=originTriggered}}>
         {name}
+        {#if originTriggered==true}
+            <div id="subContainer">
+                <slot></slot>
+            </div>
+        {/if}
     </button>
 </div>
 
@@ -35,8 +41,13 @@
 
     #main{
         display: flex;
+        flex-direction: column;
         width: 100%;
     }
+    #subContainer{
+        display: block;
+    }
+    
 
     $inner_border_radius: 5px;
     $trigger: false;
