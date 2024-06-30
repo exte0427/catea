@@ -7,6 +7,10 @@
       "_internal.js"
     ]
   },
+  "_CateaImg.svelte_svelte_type_style_lang.js": {
+    "file": "_app/immutable/assets/CateaImg.CSLxY5tq.css",
+    "src": "_CateaImg.svelte_svelte_type_style_lang.js"
+  },
   "_Take.js": {
     "file": "chunks/Take.js",
     "imports": [
@@ -109,6 +113,18 @@
       "_index.js"
     ]
   },
+  "src/lib/images/catea1.png": {
+    "file": "_app/immutable/assets/catea1.CxIxFKFD.png",
+    "src": "src/lib/images/catea1.png"
+  },
+  "src/lib/images/cateaMoving.gif": {
+    "file": "_app/immutable/assets/cateaMoving.CdPXfbCU.gif",
+    "src": "src/lib/images/cateaMoving.gif"
+  },
+  "src/lib/images/cateaMoving.png": {
+    "file": "_app/immutable/assets/cateaMoving.C1SeJXLn.png",
+    "src": "src/lib/images/cateaMoving.png"
+  },
   "src/lib/images/footer.png": {
     "file": "_app/immutable/assets/footer.Bm62diV9.png",
     "src": "src/lib/images/footer.png"
@@ -125,9 +141,12 @@
       "_pageModule.js"
     ],
     "css": [
-      "_app/immutable/assets/_layout.CuDHP2bM.css"
+      "_app/immutable/assets/_layout.WI8h2WJG.css",
+      "_app/immutable/assets/CateaImg.CSLxY5tq.css"
     ],
     "assets": [
+      "_app/immutable/assets/cateaMoving.C1SeJXLn.png",
+      "_app/immutable/assets/cateaMoving.CdPXfbCU.gif",
       "_app/immutable/assets/fira-mono-cyrillic-ext-400-normal.B04YIrm4.woff2",
       "_app/immutable/assets/fira-mono-all-400-normal.B2mvLtSD.woff",
       "_app/immutable/assets/fira-mono-cyrillic-400-normal.36-45Uyg.woff2",
@@ -147,7 +166,11 @@
       "_Take.js"
     ],
     "css": [
-      "_app/immutable/assets/_page.DYX313_Y.css"
+      "_app/immutable/assets/_page.BSeQIP9F.css",
+      "_app/immutable/assets/CateaImg.CSLxY5tq.css"
+    ],
+    "assets": [
+      "_app/immutable/assets/catea1.CxIxFKFD.png"
     ]
   },
   "src/routes/+page.ts": {
@@ -191,7 +214,7 @@
       "_firebase.js"
     ],
     "css": [
-      "_app/immutable/assets/_page.D4ympyEd.css"
+      "_app/immutable/assets/_page.CRDpgMit.css"
     ]
   },
   "src/routes/posts/+page.svelte": {
@@ -205,7 +228,7 @@
       "_firebase.js"
     ],
     "css": [
-      "_app/immutable/assets/_page.DOtRQIFF.css"
+      "_app/immutable/assets/_page.DhO5SSpZ.css"
     ]
   },
   "src/routes/posts/[id]/+page.svelte": {
@@ -220,7 +243,7 @@
       "_client.js"
     ],
     "css": [
-      "_app/immutable/assets/_page.BISOA3o3.css"
+      "_app/immutable/assets/_page.UwZuoizU.css"
     ]
   },
   "src/routes/posts/[id]/+page.ts": {

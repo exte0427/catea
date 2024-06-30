@@ -1,13 +1,14 @@
 <script>
+	import CateaImg from './../lib/sources/CateaImg.svelte';
 	import SubMove from './../lib/sources/SubMove.svelte';
 	import { isAdmin } from './../lib/modules/isAdmin';
-  import Move from '$lib/sources/Move.svelte';
+  	import Move from '$lib/sources/Move.svelte';
 
   	let adminable = false;
 
 	isAdmin.subscribe((value)=>{
 		adminable = value;
-	})
+	});
 </script>
 
 <header>
@@ -28,6 +29,10 @@
 			<Move to="/new/" name="new" />
 		{/if}
 	</div>
+
+	<div id="imgContainer">
+		<CateaImg/>
+	</div>
 </header>
 
 <style lang="scss">
@@ -44,6 +49,10 @@
 		li{
 			display: inline-block;
 		}
+
+		#imgContainer{
+			display: none;
+		}
 	}
 
 	@include desktop{
@@ -56,6 +65,10 @@
 			left:0;
 		}
 	
+	}
+
+	#imgContainer{
+		width: 100%;
 	}
 
 	header {

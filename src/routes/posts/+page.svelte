@@ -2,13 +2,13 @@
 <script lang="ts">
   import PostCard from '$lib/sources/PostCard.svelte';
 	import {Server} from '../../lib/modules/firebase';
-	import { onMount } from 'svelte';
+	import { beforeUpdate, onMount } from 'svelte';
 
 
     let posts:Server.Post[]=[];
     let visiblePosts:Server.Post[]=[];
 
-	onMount(() => {
+	beforeUpdate(() => {
         Server.init();
 		Server.getPosts().then((e:Server.Post[])=>{
             posts=e;
@@ -24,8 +24,6 @@
 
     let searchQuery:string='';
     let category:string='all';
-
-
 </script>
 
 <div id="searchDiv">
@@ -48,6 +46,24 @@
 <style lang="scss">
 
     @import '../../lib/scss/variable.scss';
+    @import '../../lib/scss/responsive.scss';
+
+    @include mobile{
+        #searchDiv{
+            flex-direction: column;
+            align-items: center;
+
+            :first-child{
+                margin-bottom: 10px;
+            }
+
+            #category{
+                width: 80%;
+                margin-left: 0;
+            }
+        }
+    }
+
 
     #searchDiv{
         display: flex;

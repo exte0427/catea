@@ -1,8 +1,13 @@
 <script lang="ts">
     export let link:string = "/";
+    export let newTab:boolean = true;
+
+    let targetData = "_self";
+    if(newTab)
+        targetData = "_blank";
 </script>
 
-<a href="{link}" target="_blank">
+<a href="{link}" target={targetData}>
     <slot></slot>
 </a>
 

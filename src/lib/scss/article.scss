@@ -1,0 +1,12 @@
+@mixin apply{
+    #articleWapper{
+    :global(p){
+        margin-bottom: 10px;
+    }
+
+    :global(strong){
+        background-color: $semi-black-color;
+        color: $white-color;
+    }
+}
+}

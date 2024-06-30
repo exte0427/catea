@@ -68,9 +68,16 @@
 <pre>{uploadName}</pre>
 
 <h1>preview</h1>
-{@html PageModule.view(content)}
+<div id="articleWapper">
+    {@html PageModule.view(content)}
+</div>
 
 <style lang="scss">
+    @import '../../lib/scss/variable.scss';
+    @import '../../lib/scss/article.scss';
+
+    @include apply;
+
     #content{
         width: 100%;
         height: 300px;

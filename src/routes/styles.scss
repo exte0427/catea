@@ -37,18 +37,6 @@ body {
 	background-color: $white-color;
 }
 
-blockquote{
-	background-color: white;
-	padding:20px;
-	border-radius: 5px;
-}
-
-blockquote::before{
-	content:"claimer";
-	display: block;
-	color:rgb(126, 126, 126);
-}
-
 h1{
 	padding: 10px;
 }

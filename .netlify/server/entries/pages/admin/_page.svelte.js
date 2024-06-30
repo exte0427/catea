@@ -1,4 +1,4 @@
-import { c as create_ssr_component, b as add_attribute } from "../../../chunks/ssr.js";
+import { c as create_ssr_component, a as add_attribute } from "../../../chunks/ssr.js";
 import { S as Server } from "../../../chunks/firebase.js";
 const css = {
   code: "form.svelte-1cjxgzw.svelte-1cjxgzw{display:flex;flex-direction:column;justify-content:center;align-items:center;margin-top:100px}form.svelte-1cjxgzw label.svelte-1cjxgzw{color:white;font-size:1.5em}form.svelte-1cjxgzw input.svelte-1cjxgzw{width:200px;height:30px;margin:10px;border-radius:5px;border-width:0px}form.svelte-1cjxgzw input[type=submit].svelte-1cjxgzw{background-color:rgb(87, 81, 74);color:white;cursor:pointer;border-radius:5px;border-width:0px}",
