@@ -32,6 +32,12 @@
         color:white;
 
         border-radius: 5px;
+        transition: 0.3s;
+
+        &:hover{
+            box-shadow: 0px 0px 0 rgba(50, 49, 47, 0.654);
+            transform: translate(5px,5px);
+        }
     }
 
     #title{

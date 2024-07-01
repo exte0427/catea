@@ -2,10 +2,16 @@
 	import { editedPost } from './../../../lib/modules/editPost';
 	import { isAdmin } from './../../../lib/modules/isAdmin';
 	import { PageModule } from '$lib/modules/pageModule';
-import {Server} from '../../../lib/modules/firebase';
+	import {Server} from '../../../lib/modules/firebase';
 	import { afterUpdate, onMount } from 'svelte';
-  import { goto } from '$app/navigation';
-  import Loading from '$lib/sources/Loading.svelte';
+ 	import { goto } from '$app/navigation';
+  	import Loading from '$lib/sources/Loading.svelte';
+	import { Carta, Markdown } from 'carta-md';
+
+	const carta = new Carta({
+		sanitizer:false
+	});
+
 
 	export let data;
     let postData:Server.Post;
@@ -70,7 +76,7 @@ import {Server} from '../../../lib/modules/firebase';
 		</div>
 	</div>
 	<div id="articleWapper">
-		{@html PageModule.view(postData.desc)}
+		<Markdown carta={carta} value={postData.desc} />
 	</div>
 	{#if adminable}
 		<button on:click = {deletePost}>delete</button>
@@ -97,7 +103,6 @@ import {Server} from '../../../lib/modules/firebase';
 <style lang="scss">
 	@import './../../../lib/scss/variable.scss';
 	@import './../../../lib/scss/responsive.scss';
-	@import './../../../lib/scss/article.scss';
 
 	@include mobile{
 		#overview{
@@ -116,30 +121,25 @@ import {Server} from '../../../lib/modules/firebase';
 			text-align: center;
 		}
 	}
-
-	@include apply;
-
 	:root{
 		scroll-behavior: smooth;
 	}
 
 	#title{
-		margin:-10px;
+		margin-left:20px;
 		margin-bottom: 10px;
-		background-color: $black-color;
-		color:white;
 		font-size: 40px;
 		padding: 10px;
 		font-weight: bold;
 		display: flex;
-		text-align: center;
+		flex-direction: column;
 
 		#titleDate{
 
 			display: flex;
 			font-size: 20px;
 			font-weight: normal;
-			align-items: center;
+
 		}
 	}
 
@@ -150,6 +150,10 @@ import {Server} from '../../../lib/modules/firebase';
 
 	#overview{
 		position: fixed;
+		z-index: 100;
+
+		transform: translate(0,-50%);
+
 		top: 50%;
 		right: 0;
 		width: 200px;
@@ -165,6 +169,19 @@ import {Server} from '../../../lib/modules/firebase';
 		a{
 			color:$black-color;
 			text-decoration: none;
+			background-color: transparent;
+			padding: 0;
+			margin: 0;
+			transition: 0;
+			box-shadow: 0px 0px 0 rgba(50, 49, 47, 0.654);
+
+			text-align: left;
+			
+			&:hover{
+				background-color: $semi-black-color;
+				color:white;
+				transform: translate(0,0);
+			}
 		}
 	}
 	

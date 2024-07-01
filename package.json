@@ -30,6 +30,7 @@
 	"type": "module",
 	"dependencies": {
 		"@types/uuid": "^9.0.8",
+		"carta-md": "^4.3.1",
 		"firebase": "^10.8.1",
 		"libgif": "^0.0.3",
 		"preview": "^0.1.3",

@@ -17,6 +17,8 @@
 :root {
 	--font-body: Arial, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
 		Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+
+	font-family: Arial, Helvetica, sans-serif;
 }
 
 * {
@@ -29,8 +31,50 @@ html,body{
 	padding: 0;
 	width: 100%;
 	height: 100%;
+}
 
-	
+:global(p){
+	margin-bottom: 10px;
+}
+
+:global(strong){
+	background-color: $semi-black-color;
+	color: $white-color;
+}
+
+:global(h2){
+	margin-top: 20px;
+}
+
+:global(hr){
+	margin:40px;
+}
+
+:global(a){
+	text-decoration: none;
+	color: white;
+	background-color: $semi-black-color;
+
+	display: block;
+	padding:10px;
+	margin: 5px;
+	margin-bottom: 10px;
+	border-radius: 5px;
+	border-width: 2px;
+	border-color: #2b2b2b;
+	text-align: center;
+
+	font-size: 20px;
+	font-weight: bold;
+	box-shadow: 5px 5px 0 rgba(50, 49, 47, 0.654);
+
+	/*hover effect*/
+	transition: 0.3s;
+
+	&:hover{
+        box-shadow: 0px 0px 0 rgba(50, 49, 47, 0.654);
+        transform: translate(5px,5px);
+    }
 }
 
 body {
@@ -51,3 +95,18 @@ p:has(img){
 	text-align: center;
 	display: block;
 }
+
+::-webkit-scrollbar {
+	width: 7px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+	display: none;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+	background: $black-color;
+	border-radius: 0;
+  }

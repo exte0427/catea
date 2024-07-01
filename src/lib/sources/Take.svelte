@@ -31,5 +31,13 @@
         font-weight: bold;
         box-shadow: 5px 5px 0 rgba(50, 49, 47, 0.654);
 
+        /*hover effect*/
+        transition: 0.3s;
+
+    }
+
+    a:hover{
+        box-shadow: 0px 0px 0 rgba(50, 49, 47, 0.654);
+        transform: translate(5px,5px);
     }
 </style>

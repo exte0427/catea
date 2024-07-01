@@ -2,7 +2,6 @@
 	import Footer from './Footer.svelte';
 	import Header from './Header.svelte';
 	import './styles.scss';
-
 	
 </script>
 
@@ -18,7 +17,8 @@
 	</main>
 </div>
 
-<style lang="scss">
+<style lang="scss" global>
+	@use './styles.scss';
 	@import '../lib/scss/responsive.scss';
 
 	@include desktop{

@@ -1,9 +1,16 @@
 <script lang="ts">
 	import { editedPost } from './../../lib/modules/editPost';
 	import { PageModule } from '$lib/modules/pageModule';
-  import { goto } from "$app/navigation";
-  import { Server } from "$lib/modules/firebase";
+    import { goto } from "$app/navigation";
+    import { Server } from "$lib/modules/firebase";
+    import { Carta, MarkdownEditor } from 'carta-md';
+	import 'carta-md/default.css'; /* Default theme */
 
+	const carta = new Carta({
+		// Remember to use a sanitizer to prevent XSS attacks!
+		// More on that below
+		sanitizer: false
+	});
 
 
     let title = '';
@@ -50,41 +57,27 @@
 </script>
 
 <h1>Post Form</h1>
-<form on:submit={handleSubmit}>
-    <label for="title">Title:</label><br>
-    <input type="text" id="title" bind:value={title}><br>
+<label for="title">Title:</label><br>
+<input type="text" id="title" bind:value={title}><br>
 
-    <label for="category">Category:</label><br>
-    <input type="text" id="category" bind:value={category}><br>
+<label for="category">Category:</label><br>
+<input type="text" id="category" bind:value={category}><br>
 
-    <label for="content">Content:</label><br>
-    <textarea id="content" bind:value={content}></textarea><br><br>
+<label for="content">Content:</label><br>
+<MarkdownEditor {carta} bind:value={content} />
 
-    <button type="submit">Submit</button>
-</form>
+<button on:click={handleSubmit}>Submit</button>
 
 <h1>Image Form</h1>
 <input type="file" accept="image/*" on:change={handleFileChange}>
 <pre>{uploadName}</pre>
 
-<h1>preview</h1>
-<div id="articleWapper">
-    {@html PageModule.view(content)}
-</div>
-
 <style lang="scss">
     @import '../../lib/scss/variable.scss';
-    @import '../../lib/scss/article.scss';
 
-    @include apply;
-
-    #content{
-        width: 100%;
-        height: 300px;
-
-        margin: 10px;
-        border-radius: 5px;
-        border-width: 0px;
-        
-    }
+    /* Set your monospace font (Required to have the editor working correctly!) */
+	:global(.carta-font-code) {
+		font-family: '...', monospace;
+		font-size: 1.1rem;
+	}
 </style>
