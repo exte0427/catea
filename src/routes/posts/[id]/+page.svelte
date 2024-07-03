@@ -7,6 +7,7 @@
  	import { goto } from '$app/navigation';
   	import Loading from '$lib/sources/Loading.svelte';
 	import { Carta, Markdown } from 'carta-md';
+  import LikeButton from '$lib/sources/LikeButton.svelte';
 
 	const carta = new Carta({
 		sanitizer:false
@@ -16,6 +17,7 @@
 	export let data;
     let postData:Server.Post;
 	let adminable=false;
+	let isPoem= false;
 
 	isAdmin.subscribe((value)=>{
 		adminable = value;
@@ -25,6 +27,11 @@
 		Server.init();
 		Server.getPost(data.id).then((e:Server.Post)=>{
 			postData=e;
+			
+
+			//setting specificated sytle
+			if(postData.category == 'poem')
+				isPoem=true;
 		});
 	});
 
@@ -67,7 +74,7 @@
 
 {:else}
 
-	<div id="title">
+	<div id="title" class:poem={isPoem}>
 		<div id="titleText">
 			{postData.title}
 		</div>
@@ -75,8 +82,11 @@
 			{PageModule.getDate(postData.date)}
 		</div>
 	</div>
-	<div id="articleWapper">
+	<div id="articleWapper" class:poem={isPoem}>
 		<Markdown carta={carta} value={postData.desc} />
+	</div>
+	<div id="afterArticleWapper">
+		<LikeButton id={postData.id}></LikeButton>
 	</div>
 	{#if adminable}
 		<button on:click = {deletePost}>delete</button>
@@ -84,7 +94,7 @@
 	{/if}
 
 	
-	<div id="overview">
+	<div id="overview" class:poem={isPoem}>
 		{#if overviewThings.length>0}
 		<ul>
 			{#each overviewThings as thing}
@@ -146,6 +156,27 @@
 	#articleWapper{
 		margin-right:220px;
 		margin-left:20px;
+	}
+
+	#afterArticleWapper{
+		flex-grow: 1;
+	}
+
+	.poem#title{
+		text-align: center;
+
+		#titleDate{
+			justify-content: center;
+		}
+	}
+
+	.poem#articleWapper{
+		text-align: center;
+		margin-right:20px;
+	}
+
+	.poem#overview{
+		display: none;
 	}
 
 	#overview{

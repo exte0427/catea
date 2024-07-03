@@ -25,7 +25,7 @@ export namespace Server{
         desc:string;
         date:Timestamp;
         id:string;
-        like:number;
+        like:string[];
         category:string;
         constructor(e:any){
             const data = e.data();
@@ -53,6 +53,25 @@ export namespace Server{
 
             resolve(posts);
         });
+    });
+
+    export const toggleLike=(postId:string)=>new Promise((resolve:(data:boolean)=>void,reject)=>{
+        const response = fetch('https://us-central1-catea-d779d.cloudfunctions.net/updateLike', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+            postId: postId
+            })
+        }).then((response) => {
+            const result = response.text().then((data)=>{
+                console.log(result);
+                resolve(true); 
+            });
+        });
+
+        
     });
 
     export const getPost=(id:string)=>new Promise((resolve : (value: Post) => void,reject)=>{

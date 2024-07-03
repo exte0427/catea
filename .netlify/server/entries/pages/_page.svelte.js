@@ -1,6 +1,7 @@
 import { c as create_ssr_component, a as add_attribute, v as validate_component } from "../../chunks/ssr.js";
 /* empty css                                                  */
 import "../../chunks/firebase.js";
+/* empty css                                                    */
 const css$1 = {
   code: "a.svelte-1kh945b{text-decoration:none;color:white;background-color:rgb(87, 81, 74);display:block;padding:10px;margin:5px;margin-bottom:10px;border-radius:5px;border-width:2px;border-color:#2b2b2b;text-align:center;font-size:20px;font-weight:bold;box-shadow:5px 5px 0 rgba(50, 49, 47, 0.654);transition:0.3s}a.svelte-1kh945b:hover{box-shadow:0px 0px 0 rgba(50, 49, 47, 0.654);transform:translate(5px, 5px)}",
   map: null

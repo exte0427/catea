@@ -48,6 +48,22 @@ var Server;
       resolve(posts);
     });
   });
+  Server2.toggleLike = (postId) => new Promise((resolve, reject) => {
+    fetch("https://us-central1-catea-d779d.cloudfunctions.net/updateLike", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        postId
+      })
+    }).then((response2) => {
+      const result = response2.text().then((data) => {
+        console.log(result);
+        resolve(true);
+      });
+    });
+  });
   Server2.getPost = (id) => new Promise((resolve, reject) => {
     const db = getFirestore();
     const rawData = doc(db, `posts`, id);

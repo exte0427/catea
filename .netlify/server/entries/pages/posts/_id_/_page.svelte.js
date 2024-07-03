@@ -3,17 +3,11 @@ import { i as isAdmin } from "../../../../chunks/isAdmin.js";
 import "../../../../chunks/pageModule.js";
 import "../../../../chunks/firebase.js";
 import "../../../../chunks/client.js";
+import { L as Loading } from "../../../../chunks/Loading.js";
 import { C as Carta } from "../../../../chunks/carta.js";
-const css$1 = {
-  code: ".loading.svelte-1074lho{display:flex;justify-content:center;align-items:center;height:100vh;position:fixed;top:0;left:0;right:0;bottom:0;z-index:1000;background-color:#f6f2ee}.loading__spinner.svelte-1074lho{width:50px;height:50px;border-top:5px solid rgb(87, 81, 74);border-radius:50%;animation:svelte-1074lho-spin 1s linear infinite}@keyframes svelte-1074lho-spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}",
-  map: null
-};
-const Loading = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  $$result.css.add(css$1);
-  return ` <div class="loading svelte-1074lho" data-svelte-h="svelte-1o358oz"><div class="loading__spinner svelte-1074lho"></div> </div>`;
-});
+/* empty css                                                          */
 const css = {
-  code: "@media(max-width: 767px){#overview.svelte-iw9jbq.svelte-iw9jbq{display:none}#articleWapper.svelte-iw9jbq.svelte-iw9jbq{margin-right:20px;margin-left:20px;width:calc(100% - 40px)}#title.svelte-iw9jbq.svelte-iw9jbq{flex-direction:column;align-items:center;text-align:center}}:root{scroll-behavior:smooth}#title.svelte-iw9jbq.svelte-iw9jbq{margin-left:20px;margin-bottom:10px;font-size:40px;padding:10px;font-weight:bold;display:flex;flex-direction:column}#title.svelte-iw9jbq #titleDate.svelte-iw9jbq{display:flex;font-size:20px;font-weight:normal}#articleWapper.svelte-iw9jbq.svelte-iw9jbq{margin-right:220px;margin-left:20px}#overview.svelte-iw9jbq.svelte-iw9jbq{position:fixed;z-index:100;transform:translate(0, -50%);top:50%;right:0;width:200px;padding:10px;color:#57514a}#overview.svelte-iw9jbq ul.svelte-iw9jbq{list-style-type:none;padding:0}#overview.svelte-iw9jbq li.svelte-iw9jbq{margin-bottom:10px}#overview.svelte-iw9jbq a.svelte-iw9jbq{color:#57514a;text-decoration:none;background-color:transparent;padding:0;margin:0;transition:0;box-shadow:0px 0px 0 rgba(50, 49, 47, 0.654);text-align:left}#overview.svelte-iw9jbq a.svelte-iw9jbq:hover{background-color:rgb(87, 81, 74);color:white;transform:translate(0, 0)}",
+  code: "@media(max-width: 767px){#overview.svelte-80jmiz.svelte-80jmiz{display:none}#articleWapper.svelte-80jmiz.svelte-80jmiz{margin-right:20px;margin-left:20px;width:calc(100% - 40px)}#title.svelte-80jmiz.svelte-80jmiz{flex-direction:column;align-items:center;text-align:center}}:root{scroll-behavior:smooth}#title.svelte-80jmiz.svelte-80jmiz{margin-left:20px;margin-bottom:10px;font-size:40px;padding:10px;font-weight:bold;display:flex;flex-direction:column}#title.svelte-80jmiz #titleDate.svelte-80jmiz{display:flex;font-size:20px;font-weight:normal}#articleWapper.svelte-80jmiz.svelte-80jmiz{margin-right:220px;margin-left:20px}#afterArticleWapper.svelte-80jmiz.svelte-80jmiz{flex-grow:1}.poem#title.svelte-80jmiz.svelte-80jmiz{text-align:center}.poem#title.svelte-80jmiz #titleDate.svelte-80jmiz{justify-content:center}.poem#articleWapper.svelte-80jmiz.svelte-80jmiz{text-align:center;margin-right:20px}.poem#overview.svelte-80jmiz.svelte-80jmiz{display:none}#overview.svelte-80jmiz.svelte-80jmiz{position:fixed;z-index:100;transform:translate(0, -50%);top:50%;right:0;width:200px;padding:10px;color:#57514a}#overview.svelte-80jmiz ul.svelte-80jmiz{list-style-type:none;padding:0}#overview.svelte-80jmiz li.svelte-80jmiz{margin-bottom:10px}#overview.svelte-80jmiz a.svelte-80jmiz{color:#57514a;text-decoration:none;background-color:transparent;padding:0;margin:0;transition:0;box-shadow:0px 0px 0 rgba(50, 49, 47, 0.654);text-align:left}#overview.svelte-80jmiz a.svelte-80jmiz:hover{background-color:rgb(87, 81, 74);color:white;transform:translate(0, 0)}",
   map: null
 };
 const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {

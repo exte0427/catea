@@ -37,6 +37,7 @@
         justify-content: center;
         align-items: center;
         margin-top: 100px;
+        background-color: $semi-black-color;
 
         label{
             color: white;

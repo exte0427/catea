@@ -33,6 +33,11 @@
 
         border-radius: 5px;
         transition: 0.3s;
+        font-family: "Jua", sans-serif;
+
+        p{
+            color:white;
+        }
 
         &:hover{
             box-shadow: 0px 0px 0 rgba(50, 49, 47, 0.654);

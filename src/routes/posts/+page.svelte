@@ -1,5 +1,6 @@
 
 <script lang="ts">
+	import Loading from './../../lib/sources/Loading.svelte';
   import PostCard from '$lib/sources/PostCard.svelte';
 	import {Server} from '../../lib/modules/firebase';
 	import { beforeUpdate, onMount } from 'svelte';
@@ -38,6 +39,9 @@
     </select>
 </div>
 <div>
+    {#if posts.length==0}
+        <Loading/>
+    {/if}
     {#each visiblePosts as post}
         <PostCard postData={post}/>
     {/each}
@@ -105,10 +109,6 @@
 
     input:focus {outline: none;}
     select:focus {outline: none;}
-    h1{
-        text-align: center;
-        margin: -10px -10px 0 -10px;
-    }
     div{
         display: flex;
         flex-wrap: wrap;

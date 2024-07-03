@@ -32,7 +32,7 @@ const CateaImg = create_ssr_component(($$result, $$props, $$bindings, slots) => 
   return `<div id="img" class="svelte-2mwn26"><img${add_attribute("src", cateaImg, 0)} alt="" id="cateaImg" class="svelte-2mwn26"> </div>`;
 });
 const css$2 = {
-  code: '@import url("https://fonts.googleapis.com/css2?family=Poetsen+One&display=swap");#main.svelte-87kabs{display:flex;flex-direction:column;width:100%}#subContainer.svelte-87kabs{display:block}.inner.svelte-87kabs{padding:10px;width:100%;height:100%;border:0;background-color:transparent;color:#2b2b2b;font-size:20px;font-family:"Poetsen One", sans-serif;font-weight:400;font-style:normal;position:relative;z-index:1}.inner.svelte-87kabs:after{content:"";position:absolute;bottom:0;left:0;width:100%;height:100%;z-index:-2}.inner.svelte-87kabs:before{content:"";position:absolute;bottom:0;left:0;width:0%;height:100%;background-color:#2b2b2b;transition:all 0.3s;z-index:-1}.inner__selected.svelte-87kabs{color:#fff}.inner__selected.svelte-87kabs:before{width:100%}',
+  code: '#main.svelte-10d27cr{display:flex;flex-direction:column;width:100%}#subContainer.svelte-10d27cr{display:block}.inner.svelte-10d27cr{padding:10px;width:100%;height:100%;border:0;background-color:transparent;color:#57514a;font-size:20px;font-family:"Jua", sans-serif;position:relative;z-index:1}.inner.svelte-10d27cr:after{content:"";position:absolute;bottom:0;left:0;width:100%;height:100%;z-index:-2}.inner.svelte-10d27cr:before{content:"";position:absolute;bottom:0;left:0;width:0%;height:100%;background-color:#57514a;transition:all 0.3s;z-index:-1}.inner__selected.svelte-10d27cr{color:#fff}.inner__selected.svelte-10d27cr:before{width:100%}',
   map: null
 };
 const Move = create_ssr_component(($$result, $$props, $$bindings, slots) => {
@@ -47,10 +47,26 @@ const Move = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   if ($$props.name === void 0 && $$bindings.name && name !== void 0)
     $$bindings.name(name);
   $$result.css.add(css$2);
-  originTriggered = $page.url.pathname.split("/")[1] === to.split("/")[1];
+  {
+    {
+      const path = $page.url.pathname.split("/").slice(1).filter((e) => e !== "");
+      const toPath = to.split("/").slice(1, -1).filter((e) => e !== "");
+      originTriggered = true;
+      if (path.length != toPath.length)
+        originTriggered = false;
+      else {
+        for (let i = 0; i < toPath.length; i++) {
+          if (path[i] !== toPath[i]) {
+            originTriggered = false;
+            break;
+          }
+        }
+      }
+    }
+  }
   triggered = originTriggered;
   $$unsubscribe_page();
-  return `<div id="main" class="svelte-87kabs"><button class="${["inner svelte-87kabs", triggered ? "inner__selected" : ""].join(" ").trim()}">${escape(name)} ${originTriggered == true ? `<div id="subContainer" class="svelte-87kabs">${slots.default ? slots.default({}) : ``}</div>` : ``}</button> </div>`;
+  return `<div id="main" class="svelte-10d27cr"><button class="${["inner svelte-10d27cr", triggered ? "inner__selected" : ""].join(" ").trim()}">${escape(name)} ${originTriggered == true ? `<div id="subContainer" class="svelte-10d27cr">${slots.default ? slots.default({}) : ``}</div>` : ``}</button> </div>`;
 });
 const css$1 = {
   code: "@media(max-width: 767px){header.svelte-kgpqto{width:100%}ul.svelte-kgpqto{text-align:center}li.svelte-kgpqto{display:inline-block}#imgContainer.svelte-kgpqto{display:none}}@media(min-width: 768px){header.svelte-kgpqto{position:fixed;height:100vh;width:200px;top:0;left:0}}#imgContainer.svelte-kgpqto{width:100%}header.svelte-kgpqto{display:flex;justify-content:space-between;flex-direction:column;justify-content:center;align-items:center;background-color:#ebe5df;padding:10px;margin:0;padding:0}#moveSector.svelte-kgpqto{width:100%;margin-bottom:10px;margin-top:10px}#text.svelte-kgpqto{font-size:30px;font-weight:bold}",
@@ -65,7 +81,7 @@ const Header = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `<header class="svelte-kgpqto"><div id="text" class="svelte-kgpqto" data-svelte-h="svelte-gc61sg">catea</div> <div id="moveSector" class="svelte-kgpqto"><ul class="svelte-kgpqto"><li class="svelte-kgpqto">${validate_component(Move, "Move").$$render($$result, { to: "/", name: "main" }, {}, {})}</li> <li class="svelte-kgpqto">${validate_component(Move, "Move").$$render($$result, { to: "/posts/", name: "posts" }, {}, {})}</li> <li class="svelte-kgpqto">${validate_component(Move, "Move").$$render(
     $$result,
     {
-      to: "/posts/0pyNOOKWWrvT0dSJiW5k",
+      to: "/posts/0pyNOOKWWrvT0dSJiW5k/",
       name: "contact"
     },
     {},
@@ -73,12 +89,12 @@ const Header = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   )}</li> <li class="svelte-kgpqto">${validate_component(Move, "Move").$$render($$result, { to: "/admin/", name: "admin" }, {}, {})}</li></ul>  ${adminable ? `${validate_component(Move, "Move").$$render($$result, { to: "/new/", name: "new" }, {}, {})}` : ``}</div> <div id="imgContainer" class="svelte-kgpqto">${validate_component(CateaImg, "CateaImg").$$render($$result, {}, {}, {})}</div> </header>`;
 });
 const css = {
-  code: '@font-face{font-family:"Fira Mono";font-style:normal;font-display:swap;font-weight:400;src:url("../../node_modules/@fontsource/fira-mono/files/fira-mono-cyrillic-ext-400-normal.woff2") format("woff2"), url("../../node_modules/@fontsource/fira-mono/files/fira-mono-all-400-normal.woff") format("woff");unicode-range:U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F}@font-face{font-family:"Fira Mono";font-style:normal;font-display:swap;font-weight:400;src:url("../../node_modules/@fontsource/fira-mono/files/fira-mono-cyrillic-400-normal.woff2") format("woff2"), url("../../node_modules/@fontsource/fira-mono/files/fira-mono-all-400-normal.woff") format("woff");unicode-range:U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116}@font-face{font-family:"Fira Mono";font-style:normal;font-display:swap;font-weight:400;src:url("../../node_modules/@fontsource/fira-mono/files/fira-mono-greek-ext-400-normal.woff2") format("woff2"), url("../../node_modules/@fontsource/fira-mono/files/fira-mono-all-400-normal.woff") format("woff");unicode-range:U+1F00-1FFF}@font-face{font-family:"Fira Mono";font-style:normal;font-display:swap;font-weight:400;src:url("../../node_modules/@fontsource/fira-mono/files/fira-mono-greek-400-normal.woff2") format("woff2"), url("../../node_modules/@fontsource/fira-mono/files/fira-mono-all-400-normal.woff") format("woff");unicode-range:U+0370-03FF}@font-face{font-family:"Fira Mono";font-style:normal;font-display:swap;font-weight:400;src:url("../../node_modules/@fontsource/fira-mono/files/fira-mono-latin-ext-400-normal.woff2") format("woff2"), url("../../node_modules/@fontsource/fira-mono/files/fira-mono-all-400-normal.woff") format("woff");unicode-range:U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF}@font-face{font-family:"Fira Mono";font-style:normal;font-display:swap;font-weight:400;src:url("../../node_modules/@fontsource/fira-mono/files/fira-mono-latin-400-normal.woff2") format("woff2"), url("../../node_modules/@fontsource/fira-mono/files/fira-mono-all-400-normal.woff") format("woff");unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD}@media(max-width: 767px){}@media(min-width: 768px){}:root{--font-body:Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,\n  	Cantarell, "Open Sans", "Helvetica Neue", sans-serif;font-family:Arial, Helvetica, sans-serif}.svelte-whz2ga{margin:0;padding:0}p{margin-bottom:10px}strong{background-color:rgb(87, 81, 74);color:#f6f2ee}h2{margin-top:20px}hr{margin:40px}a{text-decoration:none;color:white;background-color:rgb(87, 81, 74);display:block;padding:10px;margin:5px;margin-bottom:10px;border-radius:5px;border-width:2px;border-color:#2b2b2b;text-align:center;font-size:20px;font-weight:bold;box-shadow:5px 5px 0 rgba(50, 49, 47, 0.654);transition:0.3s}a:hover{box-shadow:0px 0px 0 rgba(50, 49, 47, 0.654);transform:translate(5px, 5px)}.svelte-whz2ga::-webkit-scrollbar{width:7px}.svelte-whz2ga::-webkit-scrollbar-track{display:none}.svelte-whz2ga::-webkit-scrollbar-thumb{background:#57514a;border-radius:0}@media(min-width: 768px){main.svelte-whz2ga{margin-left:200px;height:100vh}}@media(max-width: 767px){main.svelte-whz2ga{height:calc(100vh - 100px)}}main.svelte-whz2ga{display:flex;flex-direction:column}#article.svelte-whz2ga{margin:10px;flex:1}',
+  code: '@import url("https://fonts.googleapis.com/css2?family=Jua&display=swap");@media(max-width: 767px){}@media(min-width: 768px){}:root{font-family:"Jua", sans-serif;font-weight:400;font-style:normal}.svelte-1lfxpop{margin:0;padding:0}*{color:#57514a}p{margin-bottom:10px}strong{background-color:rgb(87, 81, 74);color:#f6f2ee}h2{margin-top:20px}hr{margin:40px}a{text-decoration:none;color:white;background-color:rgb(87, 81, 74);display:block;padding:10px;margin:5px;margin-bottom:10px;border-radius:5px;border-width:2px;border-color:#2b2b2b;text-align:center;font-size:20px;font-weight:bold;box-shadow:5px 5px 0 rgba(50, 49, 47, 0.654);transition:0.3s}a:hover{box-shadow:0px 0px 0 rgba(50, 49, 47, 0.654);transform:translate(5px, 5px)}.svelte-1lfxpop::-webkit-scrollbar{width:7px}.svelte-1lfxpop::-webkit-scrollbar-track{display:none}.svelte-1lfxpop::-webkit-scrollbar-thumb{background:#57514a;border-radius:0}@media(min-width: 768px){main.svelte-1lfxpop{margin-left:200px;height:100vh}}@media(max-width: 767px){main.svelte-1lfxpop{height:calc(100vh - 100px)}}main.svelte-1lfxpop{display:flex;flex-direction:column}#article.svelte-1lfxpop{margin:10px;flex:1}',
   map: null
 };
 const Layout = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$result.css.add(css);
-  return `<div class="app svelte-whz2ga">${validate_component(Header, "Header").$$render($$result, {}, {}, {})} <main class="svelte-whz2ga"><div id="article" class="svelte-whz2ga">${slots.default ? slots.default({}) : ``}</div> ${validate_component(Footer, "Footer").$$render($$result, {}, {}, {})}</main> </div>`;
+  return `<div class="app svelte-1lfxpop">${validate_component(Header, "Header").$$render($$result, {}, {}, {})} <main class="svelte-1lfxpop"><div id="article" class="svelte-1lfxpop">${slots.default ? slots.default({}) : ``}</div> ${validate_component(Footer, "Footer").$$render($$result, {}, {}, {})}</main> </div>`;
 });
 export {
   Layout as default

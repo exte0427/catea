@@ -10,7 +10,23 @@
     let originTriggered = false;
     let triggered=false;
 
-    $: originTriggered=$page.url.pathname.split("/")[1] === to.split("/")[1];
+    $:{
+        const path=$page.url.pathname.split("/").slice(1).filter(e=>e!=="");
+        const toPath=to.split("/").slice(1,-1).filter(e=>e!=="");
+        originTriggered=true;
+        //console.log(path,toPath);
+
+        if(path.length!=toPath.length)
+            originTriggered=false;
+        else{
+            for(let i=0;i<toPath.length;i++){
+                if(path[i]!==toPath[i]){
+                    originTriggered=false;
+                    break;
+                }
+            }
+        }
+    }
     $: triggered = originTriggered;
     const move=()=>{
         goto(to);
@@ -30,7 +46,7 @@
 </div>
 
 <style lang="scss">
-    @import url('https://fonts.googleapis.com/css2?family=Poetsen+One&display=swap');
+    @import '../../lib/scss/variable.scss';
 
     @mixin triggered{
         color: #fff;
@@ -60,12 +76,11 @@
         border: 0;
 
         background-color: transparent;
-        color : #2b2b2b;
+        color : $black-color;
         font-size:20px;
+        font-family: "Jua", sans-serif;
 
-        font-family: "Poetsen One", sans-serif;
-        font-weight: 400;
-        font-style: normal;
+
         position: relative  ;
         z-index: 1;
 
@@ -85,14 +100,14 @@
             left: 0;
             width: 0%;
             height: 100%;
-            background-color: #2b2b2b;
+            background-color: $black-color;
             transition: all .3s;
             z-index: -1;
         }
 
         &__selected{
             $trigger: true;
-        @include triggered;
+            @include triggered;
         }
     }
 </style>

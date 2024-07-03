@@ -20,7 +20,7 @@
 			<li><Move to="/" name="main" /></li>
 			<li><Move to="/posts/" name="posts" >
 			</Move></li>
-			<li><Move to="/posts/0pyNOOKWWrvT0dSJiW5k" name="contact" /></li>
+			<li><Move to="/posts/0pyNOOKWWrvT0dSJiW5k/" name="contact" /></li>
 			<li><Move to="/admin/" name="admin" /></li>
 		</ul>
 
