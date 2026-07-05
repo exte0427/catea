@@ -6,6 +6,7 @@
 
     export let to:string = "/";
     export let name:string = "main";
+    export let onBlue:boolean = false;
 
     let originTriggered = false;
     let triggered=false;
@@ -34,7 +35,7 @@
 </script>
 
 <div id="main">
-    <button class="inner" on:click={move} class:inner__selected={triggered}
+    <button class="inner" on:click={move} class:inner__selected={triggered} class:inner__on-blue={onBlue}
     on:mouseenter={()=>{triggered=true}} on:mouseleave={()=>{triggered=originTriggered}}>
         {name}
         {#if originTriggered==true}
@@ -56,9 +57,8 @@
     }
 
     #main{
-        display: flex;
-        flex-direction: column;
-        width: 100%;
+        display: inline-flex;
+        width: auto;
     }
     #subContainer{
         display: block;
@@ -69,19 +69,17 @@
     $trigger: false;
 
     .inner{
-        padding: 10px;
-        width: 100%;
-        height: 100%;
-
+        padding: 6px 10px;
+        width: auto;
+        text-align: left;
+        font-size: 0.95rem;
         border: 0;
-
         background-color: transparent;
-        color : $black-color;
-        font-size:20px;
-        font-family: "Jua", sans-serif;
+        color: $black-color;
+        font-family: inherit;
+        cursor: pointer;
 
-
-        position: relative  ;
+        position: relative;
         z-index: 1;
 
         &:after {
@@ -108,6 +106,19 @@
         &__selected{
             $trigger: true;
             @include triggered;
+        }
+
+        &__on-blue {
+            color: rgba(255, 255, 255, 0.92);
+
+            &:before {
+                background-color: #fff;
+            }
+
+            &.inner__selected,
+            &:hover {
+                color: #37719e;
+            }
         }
     }
 </style>

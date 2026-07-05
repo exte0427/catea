@@ -1,97 +1,97 @@
-<script>
-	import CateaImg from './../lib/sources/CateaImg.svelte';
-	import SubMove from './../lib/sources/SubMove.svelte';
-	import { isAdmin } from './../lib/modules/isAdmin';
-  	import Move from '$lib/sources/Move.svelte';
+<script lang="ts">
+	import { onMount } from 'svelte';
+	import { browser } from '$app/environment';
+	import { page } from '$app/stores';
+	import Move from '$lib/sources/Move.svelte';
 
-  	let adminable = false;
+	let mainOnBlue = false;
+	let postsOnBlue = false;
 
-	isAdmin.subscribe((value)=>{
-		adminable = value;
+	const overlaps = (el: Element | null, sectionTop: number, sectionBottom: number) => {
+		if (!el) return false;
+		const rect = el.getBoundingClientRect();
+		const mid = rect.top + rect.height / 2;
+		return mid >= sectionTop && mid <= sectionBottom;
+	};
+
+	const updateNavTone = () => {
+		if (!browser) return;
+
+		const section = document.getElementById('links');
+		if (!section || $page.url.pathname !== '/') {
+			mainOnBlue = false;
+			postsOnBlue = false;
+			return;
+		}
+
+		const { top, bottom } = section.getBoundingClientRect();
+		mainOnBlue = overlaps(document.querySelector('[data-nav="main"]'), top, bottom);
+		postsOnBlue = overlaps(document.querySelector('[data-nav="posts"]'), top, bottom);
+	};
+
+	onMount(() => {
+		updateNavTone();
+		window.addEventListener('scroll', updateNavTone, { passive: true });
+		window.addEventListener('resize', updateNavTone);
+
+		return () => {
+			window.removeEventListener('scroll', updateNavTone);
+			window.removeEventListener('resize', updateNavTone);
+		};
 	});
+
+	$: if (browser) {
+		$page.url.pathname;
+		updateNavTone();
+	}
 </script>
 
 <header>
-	<div id="text">
-		catea
-	</div>
-	<div id="moveSector">
+	<nav id="moveSector">
 		<ul>
-			<li><Move to="/" name="main" /></li>
-			<li><Move to="/posts/" name="posts" >
-			</Move></li>
-			<li><Move to="/posts/0pyNOOKWWrvT0dSJiW5k/" name="contact" /></li>
-			<li><Move to="/admin/" name="admin" /></li>
+			<li data-nav="main"><Move to="/" name="메인" onBlue={mainOnBlue} /></li>
+			<li data-nav="posts"><Move to="/posts/" name="글" onBlue={postsOnBlue} /></li>
 		</ul>
-
-		<!--for admin-->
-		{#if adminable}
-			<Move to="/new/" name="new" />
-		{/if}
-	</div>
-
-	<div id="imgContainer">
-		<CateaImg/>
-	</div>
+	</nav>
 </header>
 
 <style lang="scss">
-
-	@import './../lib/scss/responsive.scss';
-
-	@include mobile{
-		header{
-			width: 100%;			
-		}
-		ul{
-			text-align: center;
-		}
-		li{
-			display: inline-block;
-		}
-
-		#imgContainer{
-			display: none;
-		}
-	}
-
-	@include desktop{
-		header{
-			position: fixed;
-			height: 100vh;
-			width: 200px;
-
-			top:0;
-			left:0;
-		}
-	
-	}
-
-	#imgContainer{
-		width: 100%;
-	}
-
 	header {
+		position: fixed;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		z-index: 100;
 		display: flex;
-		justify-content: space-between;
 		flex-direction: column;
 		justify-content: center;
-		align-items: center;
-		background-color: #ebe5df;
-		padding:10px;
+		align-items: flex-start;
+		padding: 28px 20px;
+		background: transparent;
+		border: none;
+		pointer-events: none;
+	}
 
+	#moveSector,
+	ul,
+	li,
+	:global(header button) {
+		pointer-events: auto;
+	}
+
+	ul {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 2px;
+		list-style: none;
 		margin: 0;
 		padding: 0;
 	}
 
-	#moveSector{
-		width: 100%;
-		margin-bottom: 10px;
-		margin-top: 10px;
-	}
-
-	#text{
-		font-size: 30px;
-		font-weight: bold;
+	@media (max-width: 767px) {
+		header {
+			padding: 20px 14px;
+		}
 	}
 </style>
