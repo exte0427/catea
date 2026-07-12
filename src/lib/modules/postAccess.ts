@@ -1,6 +1,6 @@
 import { browser } from '$app/environment';
 
-const POST_ACCESS_KEY = 'catea-post-access';
+const POST_ACCESS_KEY = 'catea-post-access-v2';
 
 export const hasPostAccess = (): boolean => {
 	if (!browser) return false;
@@ -14,5 +14,10 @@ export const grantPostAccess = (): void => {
 
 export const checkPostAccessAnswer = (answer: string): boolean => {
 	const normalized = answer.trim().toLowerCase().replace(/\s/g, '');
-	return normalized.includes('닌텐도') || normalized.includes('nintendo');
+	return (
+		normalized === 'lucid' ||
+		normalized === '루시드' ||
+		normalized.includes('lucid') ||
+		normalized.includes('루시드')
+	);
 };

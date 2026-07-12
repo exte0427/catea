@@ -5,12 +5,13 @@
 	import './styles.scss';
 
 	$: isHome = $page.url.pathname === '/';
-	$: hideFooter = isHome || $page.url.pathname.startsWith('/posts');
+	$: isDami = $page.url.pathname.startsWith('/dami');
+	$: hideFooter = isHome || isDami || $page.url.pathname.startsWith('/posts');
 </script>
 
 <div class="app">
 	<main>
-		<div id="article" class:full-bleed={isHome}>
+		<div id="article" class:full-bleed={isHome || isDami}>
 			<slot />
 		</div>
 

@@ -5,6 +5,7 @@
 	import Move from '$lib/sources/Move.svelte';
 
 	let mainOnBlue = false;
+	let damiOnBlue = false;
 	let postsOnBlue = false;
 
 	const overlaps = (el: Element | null, sectionTop: number, sectionBottom: number) => {
@@ -20,12 +21,14 @@
 		const section = document.getElementById('links');
 		if (!section || $page.url.pathname !== '/') {
 			mainOnBlue = false;
+			damiOnBlue = false;
 			postsOnBlue = false;
 			return;
 		}
 
 		const { top, bottom } = section.getBoundingClientRect();
 		mainOnBlue = overlaps(document.querySelector('[data-nav="main"]'), top, bottom);
+		damiOnBlue = overlaps(document.querySelector('[data-nav="dami"]'), top, bottom);
 		postsOnBlue = overlaps(document.querySelector('[data-nav="posts"]'), top, bottom);
 	};
 
@@ -50,6 +53,7 @@
 	<nav id="moveSector">
 		<ul>
 			<li data-nav="main"><Move to="/" name="메인" onBlue={mainOnBlue} /></li>
+			<li data-nav="dami"><Move to="/dami/" name="DAMI" onBlue={damiOnBlue} /></li>
 			<li data-nav="posts"><Move to="/posts/" name="글" onBlue={postsOnBlue} /></li>
 		</ul>
 	</nav>

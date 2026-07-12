@@ -25,7 +25,7 @@
 		<h1>질문에 답해 주세요</h1>
 	</header>
 
-	<p class="question">내가 가장 좋아하는 게임사는?</p>
+	<p class="question">다미의 초기 이름은?</p>
 
 	<form class="gate-form" on:submit|preventDefault={submit}>
 		<input
