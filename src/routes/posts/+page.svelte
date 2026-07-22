@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Loading from './../../lib/sources/Loading.svelte';
 	import PostCard from '$lib/sources/PostCard.svelte';
+	import BusinessCardMaker from '$lib/sources/BusinessCardMaker.svelte';
 	import { Server } from '../../lib/modules/firebase';
 	import { categoryLabels } from '../../lib/modules/categoryLabels';
 	import { beforeUpdate } from 'svelte';
@@ -61,6 +62,8 @@
 			{/each}
 		{/if}
 	</div>
+
+	<BusinessCardMaker />
 </div>
 
 <style lang="scss">
@@ -68,7 +71,7 @@
 	@import '../../lib/scss/responsive.scss';
 
 	.posts-page {
-		max-width: 560px;
+		max-width: 720px;
 		margin: 0 auto;
 		padding: 48px 24px 80px;
 	}

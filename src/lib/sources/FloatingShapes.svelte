@@ -43,6 +43,11 @@
 	/** 회전 속도 범위 (deg/frame, speed 배율 적용 전) */
 	export let minRotationSpeed = 0.08;
 	export let maxRotationSpeed = 0.45;
+	/**
+	 * 가장자리 밖으로 나갈 수 있는 비율 (도형 반경 기준).
+	 * 0 = 카드 안쪽에만, 1 = 절반까지 잘림, 1.5 = 더 많이 잘려도 됨
+	 */
+	export let edgeOverflow = 1.5;
 
 	const shapeTypes: ShapeType[] = ['square', 'triangle', 'circle'];
 	const pathLength = 360;
@@ -55,6 +60,17 @@
 
 	const rand = (min: number, max: number) => min + Math.random() * (max - min);
 
+	const boundsFor = (size: number) => {
+		const half = size / 2;
+		const pad = half * edgeOverflow;
+		return {
+			minX: half - pad,
+			maxX: width - half + pad,
+			minY: half - pad,
+			maxY: height - half + pad
+		};
+	};
+
 	const createShapes = () => {
 		if (width <= 0 || height <= 0) return;
 
@@ -63,12 +79,13 @@
 			const velocity = rand(minVelocity, maxVelocity) * speed;
 			const angle = rand(0, Math.PI * 2);
 			const accentSpan = rand(accentMinSpan, accentMaxSpan);
+			const b = boundsFor(size);
 
 			return {
 				id,
 				type: shapeTypes[id % shapeTypes.length],
-				x: rand(size / 2, width - size / 2),
-				y: rand(size / 2, height - size / 2),
+				x: rand(b.minX, b.maxX),
+				y: rand(b.minY, b.maxY),
 				size,
 				vx: Math.cos(angle) * velocity,
 				vy: Math.sin(angle) * velocity,
@@ -88,16 +105,16 @@
 			y += vy;
 			rotation += rotationSpeed;
 
-			const half = size / 2;
+			const b = boundsFor(size);
 
-			if (x - half <= 0 || x + half >= width) {
+			if (x <= b.minX || x >= b.maxX) {
 				vx *= -1;
-				x = Math.max(half, Math.min(width - half, x));
+				x = Math.max(b.minX, Math.min(b.maxX, x));
 			}
 
-			if (y - half <= 0 || y + half >= height) {
+			if (y <= b.minY || y >= b.maxY) {
 				vy *= -1;
-				y = Math.max(half, Math.min(height - half, y));
+				y = Math.max(b.minY, Math.min(b.maxY, y));
 			}
 
 			return { ...shape, x, y, vx, vy, rotation };

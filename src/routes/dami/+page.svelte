@@ -1,11 +1,7 @@
 <script lang="ts">
-	import damiLogo from '$lib/images/dami_white.png?url';
 	import shot1 from '$lib/images/1.png?url';
 	import shot2 from '$lib/images/2.png?url';
 	import shot3 from '$lib/images/3.png?url';
-
-	const demoDriveUrl =
-		'https://drive.google.com/drive/folders/1m8DjJFu5g8Uu_xjtAkDu4qLTzEwh5YCr?usp=sharing';
 
 	const links = [
 		{
@@ -49,7 +45,6 @@
 	};
 
 	const youtubeId = 'v4p2WAl8GWI';
-
 	const mediaItems = [
 		{
 			id: 'trailer',
@@ -101,11 +96,9 @@
 		if (!dragging) return;
 		dragging = false;
 		(event.currentTarget as HTMLElement).releasePointerCapture(event.pointerId);
-
 		const threshold = 48;
 		if (dragDelta > threshold) goPrev();
 		else if (dragDelta < -threshold) goNext();
-
 		dragStartX = null;
 		dragDelta = 0;
 	};
@@ -116,209 +109,123 @@
 	<meta name="description" content="DAMI — 임준상이 개발 중인 게임" />
 </svelte:head>
 
-<div class="dami-page">
-	<section class="illustration">
-		<img class="hero-logo" src={damiLogo} alt="DAMI" />
-		<a
-			class="demo-btn"
-			href={demoDriveUrl}
-			target="_blank"
-			rel="noopener noreferrer"
+<div class="content">
+	<section class="block trailer-block">
+		<div
+			class="trailer-viewport"
+			aria-label="DAMI 미디어 갤러리"
+			on:pointerdown={onPointerDown}
+			on:pointermove={onPointerMove}
+			on:pointerup={onPointerUp}
+			on:pointercancel={onPointerUp}
+			style="--drag: {dragging ? dragDelta : 0}px"
+			role="region"
 		>
-			데모/플레이 풀 영상 받기
-		</a>
+			<div class="trailer-stage" class:dragging>
+				<button class="slide" type="button" on:click={goPrev} aria-label="이전">
+					<img src={mediaItems[prevIndex].thumb} alt="" draggable="false" />
+				</button>
+				<div
+					class="slide slide-active"
+					role="group"
+					aria-roledescription="slide"
+					aria-label={activeItem.label}
+				>
+					{#if activeItem.type === 'video'}
+						<iframe
+							src="{activeItem.src}?rel=0"
+							title={activeItem.label}
+							frameborder="0"
+							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+							allowfullscreen
+						></iframe>
+					{:else}
+						<img src={activeItem.src} alt={activeItem.label} draggable="false" />
+					{/if}
+				</div>
+				<button class="slide" type="button" on:click={goNext} aria-label="다음">
+					<img src={mediaItems[nextIndex].thumb} alt="" draggable="false" />
+				</button>
+			</div>
+		</div>
+
+		<div class="trailer-controls">
+			<button type="button" class="nav-btn" on:click={goPrev} aria-label="이전">‹</button>
+			<div class="dots" role="tablist" aria-label="미디어 선택">
+				{#each mediaItems as item, i}
+					<button
+						type="button"
+						class="dot"
+						class:active={i === active}
+						aria-label="{item.label} 보기"
+						on:click={() => (active = i)}
+					></button>
+				{/each}
+			</div>
+			<button type="button" class="nav-btn" on:click={goNext} aria-label="다음">›</button>
+		</div>
 	</section>
 
-	<div class="content">
-		<section class="block trailer-block">
-			<div
-				class="trailer-viewport"
-				aria-label="DAMI 미디어 갤러리"
-				on:pointerdown={onPointerDown}
-				on:pointermove={onPointerMove}
-				on:pointerup={onPointerUp}
-				on:pointercancel={onPointerUp}
-				style="--drag: {dragging ? dragDelta : 0}px"
-				role="region"
-			>
-				<div class="trailer-stage" class:dragging>
-					<button class="slide" type="button" on:click={goPrev} aria-label="이전">
-						<img src={mediaItems[prevIndex].thumb} alt="" draggable="false" />
-					</button>
+	<section class="block tags-block">
+		<div class="lead">
+			<p class="lead-q">{lead.question}</p>
+			<p class="lead-a">{lead.answer}</p>
+		</div>
+		{#each tags as item}
+			<article class="tag-item">
+				<h2>{item.tag}</h2>
+				<p>{item.body}</p>
+			</article>
+		{/each}
+	</section>
 
-					<div class="slide slide-active" role="group" aria-roledescription="slide" aria-label={activeItem.label}>
-						{#if activeItem.type === 'video'}
-							<iframe
-								src="{activeItem.src}?rel=0"
-								title={activeItem.label}
-								frameborder="0"
-								allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-								allowfullscreen
-							></iframe>
-						{:else}
-							<img src={activeItem.src} alt={activeItem.label} draggable="false" />
-						{/if}
-					</div>
-
-					<button class="slide" type="button" on:click={goNext} aria-label="다음">
-						<img src={mediaItems[nextIndex].thumb} alt="" draggable="false" />
-					</button>
-				</div>
-			</div>
-
-			<div class="trailer-controls">
-				<button type="button" class="nav-btn" on:click={goPrev} aria-label="이전">‹</button>
-				<div class="dots" role="tablist" aria-label="미디어 선택">
-					{#each mediaItems as item, i}
-						<button
-							type="button"
-							class="dot"
-							class:active={i === active}
-							aria-label="{item.label} 보기"
-							aria-selected={i === active}
-							on:click={() => (active = i)}
-						></button>
-					{/each}
-				</div>
-				<button type="button" class="nav-btn" on:click={goNext} aria-label="다음">›</button>
-			</div>
-		</section>
-
-		<section class="block tags-block">
-			<div class="lead">
-				<p class="lead-q">{lead.question}</p>
-				<p class="lead-a">{lead.answer}</p>
-			</div>
-
-			{#each tags as item}
-				<article class="tag-item">
-					<h2>{item.tag}</h2>
-					<p>{item.body}</p>
-				</article>
+	<section class="block">
+		<p class="section-label">관련 링크</p>
+		<ul class="links">
+			{#each links as link}
+				<li>
+					{#if link.disabled}
+						<div class="link-card link-card--disabled" aria-disabled="true">
+							<span class="link-name">{link.name}</span>
+							<span class="link-desc">{link.desc}</span>
+						</div>
+					{:else}
+						<a href={link.href} target="_blank" rel="noopener noreferrer" class="link-card">
+							<span class="link-name">{link.name}</span>
+							<span class="link-desc">{link.desc}</span>
+						</a>
+					{/if}
+				</li>
 			{/each}
-		</section>
+		</ul>
+	</section>
 
-		<section class="block links-block">
-			<p class="section-label">관련 링크</p>
-			<ul class="links">
-				{#each links as link}
-					<li>
-						{#if link.disabled}
-							<div class="link-card link-card--disabled" aria-disabled="true">
-								<span class="link-name">{link.name}</span>
-								<span class="link-desc">{link.desc}</span>
-							</div>
-						{:else}
-							<a href={link.href} target="_blank" rel="noopener noreferrer" class="link-card">
-								<span class="link-name">{link.name}</span>
-								<span class="link-desc">{link.desc}</span>
-							</a>
-						{/if}
-					</li>
-				{/each}
-			</ul>
-		</section>
+	<section class="block">
+		<p class="section-label">최소 사양</p>
+		<ul class="specs">
+			<li><span class="spec-key">OS</span><span class="spec-val">Windows 10 64비트 (21H1+)</span></li>
+			<li><span class="spec-key">CPU</span><span class="spec-val">x64 듀얼코어 (SSE2)</span></li>
+			<li><span class="spec-key">RAM</span><span class="spec-val">8GB</span></li>
+			<li><span class="spec-key">GPU</span><span class="spec-val">DirectX 11 (GTX 750 / 동급 이상)</span></li>
+			<li><span class="spec-key">저장공간</span><span class="spec-val">여유 공간 1GB 이상</span></li>
+		</ul>
+	</section>
 
-		<section class="block specs-block">
-			<p class="section-label">최소 사양</p>
-			<ul class="specs">
-				<li>
-					<span class="spec-key">OS</span>
-					<span class="spec-val">Windows 10 64비트 (21H1+)</span>
-				</li>
-				<li>
-					<span class="spec-key">CPU</span>
-					<span class="spec-val">x64 듀얼코어 (SSE2)</span>
-				</li>
-				<li>
-					<span class="spec-key">RAM</span>
-					<span class="spec-val">8GB</span>
-				</li>
-				<li>
-					<span class="spec-key">GPU</span>
-					<span class="spec-val">DirectX 11 (GTX 750 / 동급 이상)</span>
-				</li>
-				<li>
-					<span class="spec-key">저장공간</span>
-					<span class="spec-val">여유 공간 1GB 이상</span>
-				</li>
-			</ul>
-		</section>
-
-		<section class="block exhibit-block">
-			<p class="section-label">전시</p>
-			<div class="exhibit">
-				<span class="exhibit-year">2026</span>
-				<div class="exhibit-body">
-					<strong>BIC 루키 전시</strong>
-					<p>부산 인디커넥트 페스티벌 Rookie 전시 참가</p>
-				</div>
+	<section class="block">
+		<p class="section-label">전시</p>
+		<div class="exhibit">
+			<span class="exhibit-year">2026</span>
+			<div class="exhibit-body">
+				<strong>BIC 루키 전시</strong>
+				<p>부산 인디커넥트 페스티벌 Rookie 전시 참가</p>
 			</div>
-		</section>
-	</div>
+		</div>
+	</section>
 </div>
 
 <style lang="scss">
 	@import '../../lib/scss/variable.scss';
 	@import '../../lib/scss/responsive.scss';
-
-	.dami-page {
-		width: 100%;
-		padding-bottom: 96px;
-	}
-
-	.illustration {
-		width: 100%;
-		max-width: 960px;
-		margin: 0 auto;
-		min-height: 280px;
-		padding: 56px 24px 48px;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		gap: 28px;
-		background: #141414;
-		overflow: hidden;
-		box-sizing: border-box;
-	}
-
-	.hero-logo {
-		display: block !important;
-		width: min(280px, 58vw) !important;
-		max-width: 280px !important;
-		height: auto !important;
-		margin: 0 !important;
-		padding: 0 !important;
-		border-radius: 0 !important;
-		object-fit: contain;
-		box-shadow: none !important;
-	}
-
-	.demo-btn {
-		display: inline-flex !important;
-		align-items: center;
-		justify-content: center;
-		padding: 12px 22px !important;
-		margin: 0 !important;
-		border: 1.5px solid rgba(255, 255, 255, 0.55) !important;
-		border-radius: 999px !important;
-		background: transparent !important;
-		color: #f5f5f5 !important;
-		font-family: inherit;
-		font-size: 0.92rem;
-		font-weight: 500;
-		letter-spacing: 0.02em;
-		text-decoration: none !important;
-		line-height: 1.2;
-		transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-
-		&:hover {
-			background: rgba(255, 255, 255, 0.1) !important;
-			border-color: rgba(255, 255, 255, 0.85) !important;
-			color: #fff !important;
-		}
-	}
 
 	.content {
 		max-width: 960px;
@@ -337,10 +244,6 @@
 
 	.block {
 		margin-bottom: 56px;
-	}
-
-	.trailer-block {
-		max-width: none;
 	}
 
 	.trailer-viewport {
@@ -384,10 +287,6 @@
 		position: relative;
 	}
 
-	.slide-active {
-		cursor: default;
-	}
-
 	.slide img,
 	.slide iframe {
 		display: block !important;
@@ -428,7 +327,6 @@
 		line-height: 1;
 		cursor: pointer;
 		font-family: inherit;
-		transition: background-color 0.2s ease, color 0.2s ease;
 
 		&:hover {
 			background: $black-color;
@@ -449,7 +347,6 @@
 		border: 1px solid rgba($black-color, 0.35);
 		background: transparent;
 		cursor: pointer;
-		border-radius: 0;
 
 		&.active {
 			background: $black-color;
@@ -467,7 +364,6 @@
 		display: flex;
 		flex-direction: column;
 		gap: 12px;
-		padding-bottom: 8px;
 	}
 
 	.lead-q {
@@ -476,7 +372,6 @@
 		font-weight: 700;
 		line-height: 1.7;
 		color: $black-color;
-		letter-spacing: -0.02em;
 	}
 
 	.lead-a {
@@ -485,7 +380,6 @@
 		font-weight: 500;
 		line-height: 1.7;
 		color: rgba($black-color, 0.72);
-		letter-spacing: -0.02em;
 	}
 
 	.tag-item {
@@ -504,7 +398,6 @@
 			font-weight: 500;
 			line-height: 1.8;
 			color: rgba($black-color, 0.78);
-			letter-spacing: -0.02em;
 		}
 	}
 
@@ -521,7 +414,6 @@
 		display: flex !important;
 		flex-direction: column;
 		align-items: flex-start !important;
-		justify-content: center;
 		gap: 8px;
 		width: 100% !important;
 		padding: 22px 24px !important;
@@ -530,68 +422,36 @@
 		border-radius: 0 !important;
 		color: $black-color !important;
 		text-decoration: none;
-		text-align: left !important;
 		background: transparent !important;
 		box-shadow: none !important;
-		font-size: inherit !important;
-		font-weight: inherit !important;
-		transform: none !important;
-		transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 
 		&:hover {
 			border-color: $black-color !important;
 			background-color: $black-color !important;
 			color: #fff !important;
-			transform: none !important;
-			box-shadow: none !important;
 
 			.link-name,
 			.link-desc {
 				color: #fff !important;
-			}
-
-			.link-desc {
-				opacity: 0.75;
 			}
 		}
 	}
 
 	.link-card--disabled {
 		opacity: 0.38;
-		filter: grayscale(0.35);
-		cursor: not-allowed;
 		pointer-events: none;
-		user-select: none;
-
-		&:hover {
-			border-color: rgba($black-color, 0.22) !important;
-			background: transparent !important;
-			color: $black-color !important;
-
-			.link-name {
-				color: $black-color !important;
-			}
-
-			.link-desc {
-				color: rgba($black-color, 0.55) !important;
-				opacity: 1;
-			}
-		}
 	}
 
 	.link-name {
 		font-size: 1.2rem;
 		font-weight: 700;
-		letter-spacing: -0.02em;
 		color: $black-color !important;
 	}
 
 	.link-desc {
 		font-size: 0.88rem;
 		font-weight: 500;
-		line-height: 1.5;
 		color: rgba($black-color, 0.55) !important;
-		transition: color 0.2s ease, opacity 0.2s ease;
 	}
 
 	.specs {
@@ -605,7 +465,6 @@
 		display: grid;
 		grid-template-columns: 88px 1fr;
 		gap: 16px;
-		align-items: baseline;
 		padding: 16px 0;
 		border-bottom: 1px solid rgba($black-color, 0.12);
 	}
@@ -613,38 +472,30 @@
 	.spec-key {
 		font-size: 0.78rem;
 		font-weight: 700;
-		letter-spacing: 0.04em;
 		color: rgba($black-color, 0.45);
 	}
 
 	.spec-val {
 		font-size: 0.95rem;
 		font-weight: 500;
-		line-height: 1.5;
 		color: rgba($black-color, 0.85);
-		letter-spacing: -0.02em;
 	}
 
 	.exhibit {
 		display: flex;
-		align-items: flex-start;
 		gap: 18px;
 		padding: 22px 24px;
 		border: 1.5px solid rgba($black-color, 0.22);
 	}
 
 	.exhibit-year {
-		flex-shrink: 0;
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
 		min-width: 56px;
 		padding: 8px 10px;
 		font-size: 0.85rem;
 		font-weight: 700;
 		color: #fff;
 		background: $black-color;
-		letter-spacing: -0.02em;
+		text-align: center;
 	}
 
 	.exhibit-body {
@@ -653,25 +504,17 @@
 			margin: 0 0 6px;
 			font-size: 1.1rem;
 			font-weight: 700;
-			color: $black-color;
-			letter-spacing: -0.02em;
 			background: transparent;
 		}
 
 		p {
 			margin: 0;
 			font-size: 0.88rem;
-			font-weight: 500;
-			line-height: 1.55;
 			color: rgba($black-color, 0.55);
 		}
 	}
 
 	@include mobile {
-		.dami-page {
-			padding-bottom: 72px;
-		}
-
 		.content {
 			padding: 36px 20px 0;
 		}
@@ -682,48 +525,6 @@
 
 		.tags-block {
 			gap: 36px;
-		}
-
-		.illustration {
-			max-width: 100%;
-			min-height: 240px;
-			padding: 44px 20px 40px;
-			gap: 22px;
-		}
-
-		.hero-logo {
-			width: min(220px, 62vw) !important;
-		}
-
-		.demo-btn {
-			font-size: 0.86rem;
-			padding: 11px 18px !important;
-		}
-
-		.slide {
-			flex-basis: 100%;
-			width: 100%;
-		}
-
-		.trailer-stage {
-			gap: 8px;
-		}
-
-		.link-card {
-			padding: 18px 18px !important;
-		}
-
-		.link-name {
-			font-size: 1.1rem;
-		}
-
-		.specs li {
-			grid-template-columns: 72px 1fr;
-			gap: 12px;
-		}
-
-		.exhibit {
-			padding: 18px;
 		}
 	}
 </style>
