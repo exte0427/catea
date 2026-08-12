@@ -1,6 +1,13 @@
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
+    // 플레이테스트 로그: 클라이언트 쓰기 금지, 로그인(익명 포함) 읽기만
+    match /playtest/{allPaths=**} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // 기존 사이트(피드백 영상 등)
     match /{allPaths=**} {
       allow read, write: if true;
     }

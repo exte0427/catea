@@ -62,7 +62,10 @@
 	<section class="block">
 		<div class="head">
 			<p class="section-label">제출된 피드백</p>
-			<button type="button" class="action-btn" on:click={reload} disabled={loading}>새로고침</button>
+			<div class="head-actions">
+				<a class="action-btn linkish" href="/dami/analyze">Analyze</a>
+				<button type="button" class="action-btn" on:click={reload} disabled={loading}>새로고침</button>
+			</div>
 		</div>
 
 		{#if loading}
@@ -111,6 +114,18 @@
 		justify-content: space-between;
 		gap: 12px;
 		margin-bottom: 18px;
+	}
+
+	.head-actions {
+		display: flex;
+		gap: 8px;
+		align-items: center;
+	}
+
+	.linkish {
+		text-decoration: none;
+		display: inline-flex;
+		align-items: center;
 	}
 
 	.section-label {

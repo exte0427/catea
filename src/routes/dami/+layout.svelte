@@ -23,7 +23,9 @@
 	$: isFeedback = path.startsWith('/dami/feedback');
 	$: isWrite = path === '/dami/feedback/write';
 	$: isAdmin = path === '/dami/admin';
-	$: showFeedbackActions = isFeedback && !isAdmin;
+	$: isAnalyze = path === '/dami/analyze';
+	$: isSurvey = path === '/dami/survey';
+	$: showFeedbackActions = isFeedback && !isAdmin && !isAnalyze && !isSurvey;
 
 	onMount(() => {
 		// 브라우저 세션 동안만 유지 (탭/창을 닫으면 다시 인증)
@@ -95,13 +97,13 @@
 
 		<nav class="mode-tabs" aria-label="DAMI 모드">
 			<button type="button" class="mode-tab" class:active={isMain} on:click={goMain}>메인</button>
-			<button type="button" class="mode-tab" class:active={isFeedback && !isAdmin} on:click={goFeedback}>
+			<button type="button" class="mode-tab" class:active={isFeedback && !isAdmin && !isAnalyze && !isSurvey} on:click={goFeedback}>
 				피드백
 			</button>
 			<button
 				type="button"
 				class="mode-tab mode-tab--admin"
-				class:active={isAdmin}
+				class:active={isAdmin || isAnalyze}
 				class:unlocked={adminUnlocked}
 				on:click={onAdminTabClick}
 			>
