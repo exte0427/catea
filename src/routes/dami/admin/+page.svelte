@@ -55,7 +55,7 @@
 </script>
 
 <svelte:head>
-	<title>관리자 · DAMI</title>
+	<title>피드백 관리 · DAMI</title>
 </svelte:head>
 
 <div class="content">
@@ -63,7 +63,6 @@
 		<div class="head">
 			<p class="section-label">제출된 피드백</p>
 			<div class="head-actions">
-				<a class="action-btn linkish" href="/dami/analyze">Analyze</a>
 				<button type="button" class="action-btn" on:click={reload} disabled={loading}>새로고침</button>
 			</div>
 		</div>
@@ -100,7 +99,7 @@
 </div>
 
 <style lang="scss">
-	@import '../../../lib/scss/variable.scss';
+	@import '../../../lib/scss/dami.scss';
 
 	.content {
 		max-width: 960px;
@@ -119,12 +118,6 @@
 	.head-actions {
 		display: flex;
 		gap: 8px;
-		align-items: center;
-	}
-
-	.linkish {
-		text-decoration: none;
-		display: inline-flex;
 		align-items: center;
 	}
 
@@ -199,7 +192,7 @@
 
 		&:hover:not(:disabled) {
 			background: $black-color;
-			color: #fff;
+			color: $white-color;
 		}
 
 		&:disabled {

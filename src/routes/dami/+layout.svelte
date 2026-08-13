@@ -1,22 +1,19 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { fly } from 'svelte/transition';
+	import { fade, fly } from 'svelte/transition';
+	import { cubicOut } from 'svelte/easing';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
 	import damiLogo from '$lib/images/dami_white.png?url';
 
-	const demoDriveUrl =
-		'https://drive.google.com/drive/folders/1m8DjJFu5g8Uu_xjtAkDu4qLTzEwh5YCr?usp=sharing';
 	const ADMIN_PASSWORD = 'skylover20';
 	const ADMIN_KEY = 'dami-admin-unlocked-v1';
 
 	let adminUnlocked = false;
-	let adminClickCount = 0;
-	let adminClickTimer: ReturnType<typeof setTimeout> | null = null;
 	let showPasswordModal = false;
 	let passwordInput = '';
 	let passwordError = '';
-	let slideDir = 1;
+	let pendingTarget: '/dami/admin' | '/dami/analyze' | null = null;
 
 	$: path = $page.url.pathname.replace(/\/$/, '') || '/';
 	$: isMain = path === '/dami';
@@ -34,42 +31,28 @@
 		localStorage.removeItem(ADMIN_KEY);
 	});
 
-	const goMain = () => {
-		slideDir = -1;
-		goto('/dami');
-	};
-	const goFeedback = () => {
-		slideDir = path.startsWith('/dami/feedback') ? 0 : 1;
-		goto('/dami/feedback');
-	};
-	const goWrite = () => {
-		slideDir = 1;
-		goto('/dami/feedback/write');
-	};
-	const goList = () => {
-		slideDir = -1;
-		goto('/dami/feedback');
+	const goMain = () => goto('/dami');
+	const goFeedback = () => goto('/dami/feedback');
+	const goWrite = () => goto('/dami/feedback/write');
+	const goList = () => goto('/dami/feedback');
+
+	const closePasswordModal = () => {
+		showPasswordModal = false;
+		passwordInput = '';
+		passwordError = '';
+		pendingTarget = null;
 	};
 
-	const onAdminTabClick = () => {
+	const onStaffTabClick = (target: '/dami/admin' | '/dami/analyze') => {
 		if (adminUnlocked) {
-			slideDir = 1;
-			goto('/dami/admin');
+			goto(target);
 			return;
 		}
 
-		adminClickCount += 1;
-		if (adminClickTimer) clearTimeout(adminClickTimer);
-		adminClickTimer = setTimeout(() => {
-			adminClickCount = 0;
-		}, 700);
-
-		if (adminClickCount >= 2) {
-			adminClickCount = 0;
-			passwordInput = '';
-			passwordError = '';
-			showPasswordModal = true;
-		}
+		pendingTarget = target;
+		passwordInput = '';
+		passwordError = '';
+		showPasswordModal = true;
 	};
 
 	const submitPassword = () => {
@@ -80,37 +63,69 @@
 			showPasswordModal = false;
 			passwordInput = '';
 			passwordError = '';
-			slideDir = 1;
-			goto('/dami/admin');
+			const dest = pendingTarget ?? '/dami/admin';
+			pendingTarget = null;
+			goto(dest);
 		} else {
 			passwordError = '비밀번호가 올바르지 않습니다.';
 		}
 	};
 </script>
 
-<div class="dami-shell">
-	<section class="illustration">
-		<img class="hero-logo" src={damiLogo} alt="DAMI" />
-		<a class="demo-btn" href={demoDriveUrl} target="_blank" rel="noopener noreferrer">
-			데모/플레이 풀 영상 받기
-		</a>
+<svelte:head>
+	<link
+		rel="stylesheet"
+		href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+	/>
+</svelte:head>
 
-		<nav class="mode-tabs" aria-label="DAMI 모드">
-			<button type="button" class="mode-tab" class:active={isMain} on:click={goMain}>메인</button>
-			<button type="button" class="mode-tab" class:active={isFeedback && !isAdmin && !isAnalyze && !isSurvey} on:click={goFeedback}>
-				피드백
-			</button>
-			<button
-				type="button"
-				class="mode-tab mode-tab--admin"
-				class:active={isAdmin || isAnalyze}
-				class:unlocked={adminUnlocked}
-				on:click={onAdminTabClick}
-			>
-				관리자 모드
-			</button>
-		</nav>
+<div class="dami-shell">
+	<section class="brand">
+		<img class="hero-logo" src={damiLogo} alt="DAMI" />
 	</section>
+
+	<nav class="mode-tabs" aria-label="DAMI 모드">
+		<button type="button" class="mode-tab" class:active={isMain} on:click={goMain}>메인</button>
+		<button
+			type="button"
+			class="mode-tab"
+			class:active={isFeedback && !isSurvey}
+			on:click={goFeedback}
+		>
+			피드백
+		</button>
+		<button
+			type="button"
+			class="mode-tab mode-tab--locked"
+			class:active={isAdmin}
+			class:unlocked={adminUnlocked}
+			aria-disabled={!adminUnlocked}
+			on:click={() => onStaffTabClick('/dami/admin')}
+		>
+			피드백 관리
+		</button>
+		<button
+			type="button"
+			class="mode-tab mode-tab--locked"
+			class:active={isAnalyze}
+			class:unlocked={adminUnlocked}
+			aria-disabled={!adminUnlocked}
+			on:click={() => onStaffTabClick('/dami/analyze')}
+		>
+			게임 분석
+		</button>
+	</nav>
+
+	{#if isMain}
+		<div
+			class="hero-copy"
+			in:fly={{ y: 12, duration: 560, opacity: 0, easing: cubicOut }}
+			out:fade={{ duration: 220, easing: cubicOut }}
+		>
+			<p>기형화된 생태계의 <strong>식어버린 포스트아포칼립스의</strong> 세상에서 희망은 있을까요?</p>
+			<p><strong>일촉즉발</strong>, 과감한 액션의 탑뷰 어드벤처 게임 다미입니다.</p>
+		</div>
+	{/if}
 
 	{#if showFeedbackActions}
 		<div class="feedback-actions-bar">
@@ -126,8 +141,8 @@
 		{#key path}
 			<div
 				class="page-panel"
-				in:fly={{ x: slideDir >= 0 ? 56 : -56, duration: 320, opacity: 0 }}
-				out:fly={{ x: slideDir >= 0 ? -56 : 56, duration: 240, opacity: 0 }}
+				in:fly={{ y: 18, duration: 520, opacity: 0, easing: cubicOut }}
+				out:fade={{ duration: 280, easing: cubicOut }}
 			>
 				<slot />
 			</div>
@@ -141,8 +156,8 @@
 		role="button"
 		tabindex="0"
 		aria-label="모달 닫기"
-		on:click={() => (showPasswordModal = false)}
-		on:keydown={(e) => e.key === 'Escape' && (showPasswordModal = false)}
+		on:click={closePasswordModal}
+		on:keydown={(e) => e.key === 'Escape' && closePasswordModal()}
 	>
 		<div
 			class="modal"
@@ -152,8 +167,8 @@
 			on:click|stopPropagation
 			on:keydown|stopPropagation
 		>
-			<h2 id="admin-pw-title">관리자 모드</h2>
-			<p>비밀번호를 입력하세요.</p>
+			<h2 id="admin-pw-title">관리자 인증</h2>
+			<p>비밀번호를 입력하면 피드백 관리와 게임 분석에 접근할 수 있습니다.</p>
 			<form on:submit|preventDefault={submitPassword}>
 				<input
 					type="password"
@@ -165,7 +180,7 @@
 					<p class="password-error">{passwordError}</p>
 				{/if}
 				<div class="modal-actions">
-					<button type="button" class="action-btn" on:click={() => (showPasswordModal = false)}>
+					<button type="button" class="action-btn" on:click={closePasswordModal}>
 						취소
 					</button>
 					<button type="submit" class="action-btn action-btn--primary">확인</button>
@@ -176,151 +191,214 @@
 {/if}
 
 <style lang="scss">
-	@import '../../lib/scss/variable.scss';
+	@import '../../lib/scss/dami.scss';
 	@import '../../lib/scss/responsive.scss';
 
 	.dami-shell {
 		width: 100%;
+		min-height: 100vh;
 		padding-bottom: 96px;
-	}
+		background: $dami-bg;
+		color: $dami-text;
+		font-family: 'Pretendard Variable', Pretendard, 'GMarketSans', sans-serif;
 
-	.illustration {
-		width: 100%;
-		max-width: 960px;
-		margin: 0 auto;
-		min-height: 280px;
-		padding: 56px 24px 40px;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-		gap: 22px;
-		background: #141414;
-		overflow: hidden;
-		box-sizing: border-box;
-	}
-
-	.hero-logo {
-		display: block !important;
-		width: min(280px, 58vw) !important;
-		max-width: 280px !important;
-		height: auto !important;
-		margin: 0 !important;
-		padding: 0 !important;
-		border-radius: 0 !important;
-		object-fit: contain;
-		box-shadow: none !important;
-	}
-
-	.demo-btn,
-	.write-btn {
-		display: inline-flex !important;
-		align-items: center;
-		justify-content: center;
-		margin: 0 !important;
-		padding: 12px 22px !important;
-		border: 1.5px solid #fff !important;
-		border-radius: 14px !important;
-		background: transparent !important;
-		color: #fff !important;
-		font-family: inherit;
-		font-size: 0.92rem;
-		font-weight: 500;
-		letter-spacing: 0.02em;
-		text-decoration: none !important;
-		line-height: 1.2;
-		box-shadow: none !important;
-		cursor: pointer;
-
-		&:hover {
-			background: rgba(255, 255, 255, 0.08) !important;
-			border-color: #fff !important;
-			color: #fff !important;
+		:global(strong) {
+			background: transparent;
+			color: $dami-accent-bright;
+			font-weight: 700;
 		}
-	}
 
-	.feedback-actions-bar {
-		max-width: 960px;
-		margin: 0 auto;
-		padding: 18px 24px 0;
-		display: flex;
-		justify-content: center;
-	}
-
-	.write-btn {
-		border-color: $black-color !important;
-		color: $black-color !important;
-
-		&:hover {
-			background: $black-color !important;
-			color: #fff !important;
-			border-color: $black-color !important;
+		:global(.loading .track) {
+			background: rgba(255, 255, 255, 0.12);
 		}
-	}
 
-	.write-btn--ghost {
-		border-color: rgba($black-color, 0.35) !important;
-		color: rgba($black-color, 0.7) !important;
-
-		&:hover {
-			background: $black-color !important;
-			color: #fff !important;
-			border-color: $black-color !important;
+		:global(.loading .bar) {
+			background: $dami-accent;
 		}
-	}
 
-	.page-stage {
-		position: relative;
-		overflow: hidden;
-		min-height: 240px;
-	}
+		:global(.loading p) {
+			color: $dami-muted;
+		}
 
-	.page-panel {
-		width: 100%;
+		:global(input),
+		:global(textarea),
+		:global(select) {
+			background: rgba(255, 255, 255, 0.04);
+			color: $dami-text;
+			caret-color: $dami-text;
+		}
 	}
 
 	.mode-tabs {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		gap: 8px;
+		gap: 2px;
 		flex-wrap: wrap;
+		padding: 8px 24px 20px;
 	}
 
 	.mode-tab {
-		padding: 8px 14px;
-		border: 1px solid rgba(255, 255, 255, 0.28);
+		position: relative;
+		padding: 10px 18px;
+		border: 0;
 		background: transparent;
-		color: rgba(255, 255, 255, 0.72);
+		color: $dami-faint;
 		font-family: inherit;
-		font-size: 0.84rem;
+		font-size: 0.82rem;
 		font-weight: 500;
+		letter-spacing: 0.12em;
 		cursor: pointer;
+		transition: color 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+
+		&:after {
+			content: '';
+			position: absolute;
+			left: 18px;
+			right: 18px;
+			bottom: 4px;
+			height: 1px;
+			background: $dami-accent-bright;
+			transform: scaleX(0);
+			transform-origin: center;
+			transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+		}
 
 		&:hover {
-			color: #fff;
-			border-color: rgba(255, 255, 255, 0.55);
+			color: $dami-text;
 		}
 
 		&.active {
-			color: #141414;
-			background: #f2f2f2;
-			border-color: #f2f2f2;
+			color: $dami-accent-bright;
+
+			&:after {
+				transform: scaleX(1);
+			}
 		}
 	}
 
-	.mode-tab--admin {
-		opacity: 0.42;
-		cursor: default;
+	.mode-tab--locked {
+		opacity: 0.38;
+		cursor: pointer;
+
+		&:hover {
+			color: $dami-faint;
+		}
 
 		&.unlocked {
 			opacity: 1;
 			cursor: pointer;
+
+			&:hover {
+				color: $dami-text;
+			}
 		}
 
 		&.active {
 			opacity: 1;
 		}
+	}
+
+	.brand {
+		width: 100%;
+		max-width: 860px;
+		margin: 0 auto;
+		padding: 48px 24px 4px;
+		display: flex;
+		justify-content: center;
+		box-sizing: border-box;
+	}
+
+	.hero-logo {
+		display: block !important;
+		width: min(420px, 78vw) !important;
+		max-width: 420px !important;
+		height: auto !important;
+		margin: 0 !important;
+		padding: 0 !important;
+		border-radius: 0 !important;
+		object-fit: contain;
+		box-shadow: none !important;
+		filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.45));
+	}
+
+	.hero-copy {
+		max-width: 640px;
+		margin: 0 auto 8px;
+		padding: 0 24px 20px;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		text-align: center;
+
+		p {
+			margin: 0;
+			font-size: clamp(0.95rem, 2.2vw, 1.12rem);
+			font-weight: 500;
+			line-height: 1.85;
+			letter-spacing: -0.02em;
+			color: $dami-text;
+		}
+	}
+
+	.write-btn {
+		display: inline-flex !important;
+		align-items: center;
+		justify-content: center;
+		margin: 0 !important;
+		padding: 12px 22px !important;
+		border: 1px solid rgba(244, 240, 234, 0.7) !important;
+		border-radius: 0 !important;
+		background: transparent !important;
+		color: $dami-text !important;
+		font-family: inherit;
+		font-size: 0.88rem;
+		font-weight: 500;
+		letter-spacing: 0.04em;
+		text-decoration: none !important;
+		line-height: 1.2;
+		box-shadow: none !important;
+		cursor: pointer;
+
+		&:hover {
+			background: $dami-text !important;
+			border-color: $dami-text !important;
+			color: $dami-bg !important;
+			transform: none !important;
+		}
+	}
+
+	.feedback-actions-bar {
+		max-width: 860px;
+		margin: 0 auto;
+		padding: 18px 24px 0;
+		display: flex;
+		justify-content: center;
+	}
+
+	.write-btn--ghost {
+		border-color: $dami-line !important;
+		color: $dami-muted !important;
+
+		&:hover {
+			background: $dami-text !important;
+			color: $dami-bg !important;
+			border-color: $dami-text !important;
+		}
+	}
+
+	.page-stage {
+		position: relative;
+		display: grid;
+		align-items: start;
+		min-height: 240px;
+		overflow: hidden;
+	}
+
+	.page-panel {
+		grid-area: 1 / 1;
+		width: 100%;
+		align-self: start;
 	}
 
 	.modal-backdrop {
@@ -331,32 +409,36 @@
 		align-items: center;
 		justify-content: center;
 		padding: 24px;
-		background: rgba(0, 0, 0, 0.55);
+		background: rgba(0, 0, 0, 0.72);
 	}
 
 	.modal {
 		width: min(400px, 100%);
 		padding: 28px 24px;
-		background: #fff;
-		border: 1.5px solid rgba($black-color, 0.2);
+		background: #1e1b18;
+		border: 1px solid $dami-line;
+		color: $dami-text;
 
 		h2 {
 			margin: 0 0 8px;
 			font-size: 1.2rem;
 			font-weight: 700;
+			color: $dami-text;
 		}
 
 		p {
 			margin: 0 0 16px;
 			font-size: 0.9rem;
-			color: rgba($black-color, 0.65);
+			color: $dami-muted;
 		}
 
 		input {
 			width: 100%;
 			padding: 12px 14px;
 			margin-bottom: 12px;
-			border: 1.5px solid rgba($black-color, 0.22);
+			border: 1px solid $dami-line;
+			background: transparent;
+			color: $dami-text;
 			font-family: inherit;
 			font-size: 0.95rem;
 			box-sizing: border-box;
@@ -364,7 +446,7 @@
 	}
 
 	.password-error {
-		color: #c0392b !important;
+		color: #e07070 !important;
 		font-size: 0.85rem !important;
 		margin: 0 0 12px !important;
 	}
@@ -377,25 +459,25 @@
 
 	.action-btn {
 		padding: 10px 16px;
-		border: 1.5px solid rgba($black-color, 0.28);
+		border: 1px solid $dami-line;
 		background: transparent;
-		color: $black-color;
+		color: $dami-text;
 		font-family: inherit;
 		font-size: 0.9rem;
 		font-weight: 500;
 		cursor: pointer;
 
 		&:hover {
-			background: $black-color;
-			color: #fff;
-			border-color: $black-color;
+			background: $dami-text;
+			color: $dami-bg;
+			border-color: $dami-text;
 		}
 	}
 
 	.action-btn--primary {
-		background: $black-color;
-		color: #fff;
-		border-color: $black-color;
+		background: $dami-accent;
+		color: $dami-bg;
+		border-color: $dami-accent;
 	}
 
 	@include mobile {
@@ -403,25 +485,29 @@
 			padding-bottom: 72px;
 		}
 
-		.illustration {
-			max-width: 100%;
-			min-height: 240px;
-			padding: 44px 20px 32px;
-			gap: 18px;
+		.mode-tabs {
+			padding: 4px 16px 16px;
+		}
+
+		.brand {
+			padding: 32px 20px 0;
 		}
 
 		.hero-logo {
-			width: min(220px, 62vw) !important;
+			width: min(280px, 72vw) !important;
 		}
 
-		.demo-btn {
-			font-size: 0.86rem;
-			padding: 11px 18px !important;
+		.hero-copy {
+			padding: 0 20px 16px;
+		}
+
+		.hero-copy p {
+			font-size: 0.92rem;
 		}
 
 		.mode-tab {
-			font-size: 0.78rem;
-			padding: 7px 11px;
+			font-size: 0.76rem;
+			padding: 7px 12px;
 		}
 	}
 </style>

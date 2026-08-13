@@ -202,7 +202,7 @@
 </section>
 
 <style lang="scss">
-	@import '../../../lib/scss/variable.scss';
+	@import '../../../lib/scss/dami.scss';
 	@import '../../../lib/scss/responsive.scss';
 
 	.survey {
@@ -343,7 +343,7 @@
 		padding: 14px;
 		border: 1.5px solid rgba($black-color, 0.25);
 		border-radius: 4px;
-		background: rgba($white-color, 0.7);
+		background: rgba($black-color, 0.04);
 		color: $black-color;
 		font: inherit;
 		line-height: 1.5;

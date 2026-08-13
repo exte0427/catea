@@ -1,0 +1,21 @@
+$dami-bg: #161412;
+$dami-text: #f4f0ea;
+$dami-muted: rgba(244, 240, 234, 0.58);
+$dami-faint: rgba(244, 240, 234, 0.4);
+$dami-line: rgba(244, 240, 234, 0.22);
+$dami-accent: #e89b3c;
+$dami-accent-bright: #f2a65a;
+
+// Drop-in aliases so existing DAMI pages can import this instead of variable.scss
+$black-color: $dami-text;
+$white-color: $dami-bg;
+$semi-black-color: $dami-accent;
+
+@font-face {
+	font-family: 'PartialSansKR';
+	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/PartialSansKR-Regular.woff2')
+		format('woff2');
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}

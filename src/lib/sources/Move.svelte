@@ -7,6 +7,7 @@
     export let to:string = "/";
     export let name:string = "main";
     export let onBlue:boolean = false;
+    export let onDark:boolean = false;
 
     let originTriggered = false;
     let triggered=false;
@@ -35,7 +36,7 @@
 </script>
 
 <div id="main">
-    <button class="inner" on:click={move} class:inner__selected={triggered} class:inner__on-blue={onBlue}
+    <button class="inner" on:click={move} class:inner__selected={triggered} class:inner__on-blue={onBlue} class:inner__on-dark={onDark}
     on:mouseenter={()=>{triggered=true}} on:mouseleave={()=>{triggered=originTriggered}}>
         {name}
         {#if originTriggered==true}
@@ -118,6 +119,19 @@
             &.inner__selected,
             &:hover {
                 color: #37719e;
+            }
+        }
+
+        &__on-dark {
+            color: rgba(255, 255, 255, 0.92);
+
+            &:before {
+                background-color: #fff;
+            }
+
+            &.inner__selected,
+            &:hover {
+                color: #161412;
             }
         }
     }

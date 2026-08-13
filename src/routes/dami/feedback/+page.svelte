@@ -66,11 +66,6 @@
 
 <div class="content">
 	<section class="block">
-		<p class="panel-note">
-			닉네임·비밀번호를 설정한 피드백은 비밀번호로 열람할 수 있습니다. 닉네임을 넣지 않은 피드백만
-			작성 기기에서 열 수 있습니다. 관리자는 관리자 모드에서 전체 열람이 가능합니다.
-		</p>
-
 		{#if loading}
 			<LoadingBar label="피드백 목록 불러오는 중" />
 		{:else if error}
@@ -107,19 +102,12 @@
 </div>
 
 <style lang="scss">
-	@import '../../../lib/scss/variable.scss';
+	@import '../../../lib/scss/dami.scss';
 
 	.content {
 		max-width: 960px;
 		margin: 0 auto;
 		padding: 40px 24px 0;
-	}
-
-	.panel-note {
-		margin: 0 0 28px;
-		font-size: 0.85rem;
-		line-height: 1.6;
-		color: rgba($black-color, 0.5);
 	}
 
 	.muted {

@@ -1,7 +1,11 @@
-<script lang="ts">
+﻿<script lang="ts">
+	import { fly } from 'svelte/transition';
+	import { cubicOut } from 'svelte/easing';
 	import shot1 from '$lib/images/1.png?url';
 	import shot2 from '$lib/images/2.png?url';
 	import shot3 from '$lib/images/3.png?url';
+
+	const bicUrl = 'https://bicfest.org/exhibition/view/2030?chk=0&param=0';
 
 	const links = [
 		{
@@ -12,9 +16,9 @@
 		},
 		{
 			name: 'BIC',
-			href: '#',
-			desc: '부산 인디커넥트 페스티벌 관련 페이지',
-			disabled: true
+			href: bicUrl,
+			desc: '부산 인디커넥트 페스티벌 전시 페이지',
+			disabled: false
 		},
 		{
 			name: 'Discord',
@@ -26,23 +30,18 @@
 
 	const tags = [
 		{
-			tag: '#일촉즉발',
-			body: '모든 대상은 두 번 타격당하면 끝입니다. 유예는 없습니다. 제한된 행동력 속, 모든 선택이 치명적으로 작용하는 일촉즉발의 상황에서 나아갈 수 있을까요.'
+			tag: '# 일촉즉발',
+			html: '모든 대상은 <strong class="u">두 번 타격당하면 끝입니다</strong>. 유예는 없습니다. 제한된 행동력 속, 모든 선택이 치명적으로 작용하는 <strong>일촉즉발의 상황</strong>에서 나아갈 수 있을까요'
 		},
 		{
-			tag: '#포스트아포칼립스',
-			body: '식어버린 세상, 무너져내린 문명, 더이상 인간은 세상의 주인이 아닌가봅니다. 빛과 온기로 동물을 유혹해 포자를 퍼트리는 동충하초, 사나움을 무기로 적응해나간 동물들. 7월이지만 매미소리는 들리지 않는, 그런 세상에서의 일상을 담습니다.'
+			tag: '# 포스트 아포칼립스',
+			html: '<strong>식어버린 세상, 무너져내린 문명,</strong> 더이상 인간은 세상의 주인이 아닌가봅니다. 빛과 온기로 동물을 유혹해 포자를 퍼트리는 동충하초, 사나움을 무기로 적응해나간 동물들. 7월이지만 매미소리는 들리지 않는, 그런 세상에서의 일상을 담습니다'
 		},
 		{
-			tag: '#희망',
-			body: '물자를 수집하고, 충분한 휴식을 취하세요. 뛰어난 조력자를 만나는 일도, 굉장한 은신처의 정보를 입수하는 일도 없지만 절망적인 하루하루가 내일을 살아낼 희망이 되는 날이 올겁니다.'
+			tag: '# 희망',
+			html: '물자를 수집하고, 충분한 휴식을 취하세요. 뛰어난 조력자를 만나는 일도, 굉장한 은신처의 정보를 입수하는 일도 없지만 절망적인 하루하루가 내일을 살아낼 희망이 되는 날이 올겁니다'
 		}
 	];
-
-	const lead = {
-		question: '기형화된 생태계의 식어버린 포스트아포칼립스의 세상에서 희망은 있을까요?',
-		answer: '일촉즉발, 과감한 액션의 탑뷰 어드벤처 게임 다미입니다.'
-	};
 
 	const youtubeId = 'v4p2WAl8GWI';
 	const mediaItems = [
@@ -59,6 +58,7 @@
 	];
 
 	let active = 0;
+	let dir = 1;
 	let dragStartX: number | null = null;
 	let dragDelta = 0;
 	let dragging = false;
@@ -68,16 +68,25 @@
 		return ((index % len) + len) % len;
 	};
 
-	$: prevIndex = wrap(active - 1);
-	$: nextIndex = wrap(active + 1);
 	$: activeItem = mediaItems[active];
 
 	const goPrev = () => {
+		dir = -1;
 		active = wrap(active - 1);
 	};
 
 	const goNext = () => {
+		dir = 1;
 		active = wrap(active + 1);
+	};
+
+	const goTo = (index: number) => {
+		if (index === active) return;
+		const len = mediaItems.length;
+		if (active === len - 1 && index === 0) dir = 1;
+		else if (active === 0 && index === len - 1) dir = -1;
+		else dir = index > active ? 1 : -1;
+		active = index;
 	};
 
 	const onPointerDown = (event: PointerEvent) => {
@@ -118,34 +127,28 @@
 			on:pointermove={onPointerMove}
 			on:pointerup={onPointerUp}
 			on:pointercancel={onPointerUp}
-			style="--drag: {dragging ? dragDelta : 0}px"
 			role="region"
 		>
-			<div class="trailer-stage" class:dragging>
-				<button class="slide" type="button" on:click={goPrev} aria-label="이전">
-					<img src={mediaItems[prevIndex].thumb} alt="" draggable="false" />
-				</button>
-				<div
-					class="slide slide-active"
-					role="group"
-					aria-roledescription="slide"
-					aria-label={activeItem.label}
-				>
-					{#if activeItem.type === 'video'}
-						<iframe
-							src="{activeItem.src}?rel=0"
-							title={activeItem.label}
-							frameborder="0"
-							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-							allowfullscreen
-						></iframe>
-					{:else}
-						<img src={activeItem.src} alt={activeItem.label} draggable="false" />
-					{/if}
-				</div>
-				<button class="slide" type="button" on:click={goNext} aria-label="다음">
-					<img src={mediaItems[nextIndex].thumb} alt="" draggable="false" />
-				</button>
+			<div class="slide-frame">
+				{#key active}
+					<div
+						class="slide-media"
+						in:fly={{ x: dir * 56, duration: 480, opacity: 0, easing: cubicOut }}
+						out:fly={{ x: dir * -56, duration: 360, opacity: 0, easing: cubicOut }}
+					>
+						{#if activeItem.type === 'video'}
+							<iframe
+								src="{activeItem.src}?rel=0"
+								title={activeItem.label}
+								frameborder="0"
+								allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+								allowfullscreen
+							></iframe>
+						{:else}
+							<img src={activeItem.src} alt={activeItem.label} draggable="false" />
+						{/if}
+					</div>
+				{/key}
 			</div>
 		</div>
 
@@ -158,7 +161,7 @@
 						class="dot"
 						class:active={i === active}
 						aria-label="{item.label} 보기"
-						on:click={() => (active = i)}
+						on:click={() => goTo(i)}
 					></button>
 				{/each}
 			</div>
@@ -167,14 +170,10 @@
 	</section>
 
 	<section class="block tags-block">
-		<div class="lead">
-			<p class="lead-q">{lead.question}</p>
-			<p class="lead-a">{lead.answer}</p>
-		</div>
 		{#each tags as item}
 			<article class="tag-item">
 				<h2>{item.tag}</h2>
-				<p>{item.body}</p>
+				<p>{@html item.html}</p>
 			</article>
 		{/each}
 	</section>
@@ -213,24 +212,25 @@
 
 	<section class="block">
 		<p class="section-label">전시</p>
-		<div class="exhibit">
+		<a class="exhibit" href={bicUrl} target="_blank" rel="noopener noreferrer">
 			<span class="exhibit-year">2026</span>
 			<div class="exhibit-body">
 				<strong>BIC 루키 전시</strong>
 				<p>부산 인디커넥트 페스티벌 Rookie 전시 참가</p>
 			</div>
-		</div>
+		</a>
 	</section>
 </div>
 
 <style lang="scss">
-	@import '../../lib/scss/variable.scss';
+	@import '../../lib/scss/dami.scss';
 	@import '../../lib/scss/responsive.scss';
 
 	.content {
-		max-width: 960px;
+		max-width: 860px;
 		margin: 0 auto;
-		padding: 40px 24px 0;
+		padding: 24px 24px 0;
+		color: $dami-text;
 	}
 
 	.section-label {
@@ -238,12 +238,12 @@
 		font-weight: 500;
 		letter-spacing: 0.18em;
 		text-transform: uppercase;
-		color: rgba($black-color, 0.4);
+		color: $dami-faint;
 		margin: 0 0 18px;
 	}
 
 	.block {
-		margin-bottom: 56px;
+		margin-bottom: 72px;
 	}
 
 	.trailer-viewport {
@@ -258,37 +258,25 @@
 		}
 	}
 
-	.trailer-stage {
-		display: flex;
-		align-items: stretch;
-		justify-content: center;
-		gap: 12px;
-		width: 100%;
-		transform: translateX(var(--drag, 0px));
-		transition: transform 0.25s ease;
-
-		&.dragging {
-			transition: none;
-		}
-	}
-
-	.slide {
-		flex: 0 0 100%;
+	.slide-frame {
+		position: relative;
+		display: grid;
 		width: 100%;
 		aspect-ratio: 16 / 9;
 		overflow: hidden;
-		border: 1.5px solid rgba($black-color, 0.18);
-		background: #1a1512;
-		padding: 0;
-		margin: 0;
-		font-family: inherit;
-		cursor: pointer;
-		pointer-events: none;
-		position: relative;
+		border: 1px solid $dami-line;
+		background: #0e0c0b;
 	}
 
-	.slide img,
-	.slide iframe {
+	.slide-media {
+		grid-area: 1 / 1;
+		width: 100%;
+		height: 100%;
+		min-height: 0;
+	}
+
+	.slide-media img,
+	.slide-media iframe {
 		display: block !important;
 		width: 100% !important;
 		max-width: none !important;
@@ -298,15 +286,12 @@
 		border: 0 !important;
 		border-radius: 0 !important;
 		object-fit: contain;
-		background: #1a1512;
-		pointer-events: none;
+		background: #0e0c0b;
 		box-shadow: none !important;
 	}
 
-	.slide-active iframe {
+	.slide-media iframe {
 		pointer-events: auto;
-		position: absolute;
-		inset: 0;
 	}
 
 	.trailer-controls {
@@ -320,17 +305,19 @@
 	.nav-btn {
 		width: 36px;
 		height: 36px;
-		border: 1.5px solid rgba($black-color, 0.22);
+		border: 0;
+		outline: none;
 		background: transparent;
-		color: $black-color;
+		color: $dami-text;
 		font-size: 1.4rem;
 		line-height: 1;
 		cursor: pointer;
 		font-family: inherit;
 
-		&:hover {
-			background: $black-color;
-			color: $white-color;
+		&:hover,
+		&:focus-visible {
+			background: $dami-text;
+			color: $dami-bg;
 		}
 	}
 
@@ -344,13 +331,13 @@
 		width: 8px;
 		height: 8px;
 		padding: 0;
-		border: 1px solid rgba($black-color, 0.35);
+		border: 1px solid $dami-muted;
 		background: transparent;
 		cursor: pointer;
 
 		&.active {
-			background: $black-color;
-			border-color: $black-color;
+			background: $dami-accent;
+			border-color: $dami-accent;
 		}
 	}
 
@@ -358,46 +345,40 @@
 		display: flex;
 		flex-direction: column;
 		gap: 48px;
-	}
-
-	.lead {
-		display: flex;
-		flex-direction: column;
-		gap: 12px;
-	}
-
-	.lead-q {
-		margin: 0;
-		font-size: 1.15rem;
-		font-weight: 700;
-		line-height: 1.7;
-		color: $black-color;
-	}
-
-	.lead-a {
-		margin: 0;
-		font-size: 1rem;
-		font-weight: 500;
-		line-height: 1.7;
-		color: rgba($black-color, 0.72);
+		padding: 8px 0 4px;
 	}
 
 	.tag-item {
 		h2 {
-			margin: 0 0 16px;
-			font-size: clamp(2.4rem, 8vw, 4.5rem);
-			font-weight: 700;
-			color: $black-color;
-			letter-spacing: -0.04em;
+			margin: 0 0 12px;
+			font-family: 'PartialSansKR', 'GMarketSans', sans-serif;
+			font-size: clamp(1.35rem, 3.2vw, 1.85rem);
+			font-weight: 400;
+			color: $dami-text;
+			letter-spacing: -0.03em;
 			line-height: 1.05;
 		}
 
 		p {
 			margin: 0;
-			font-size: 1rem;
+			max-width: 640px;
+			font-size: 1.02rem;
 			font-weight: 500;
-			line-height: 1.8;
-			color: rgba($black-color, 0.78);
+			line-height: 1.9;
+			letter-spacing: -0.02em;
+			color: rgba(244, 240, 234, 0.88);
+		}
+
+		:global(strong) {
+			background: transparent;
+			color: $dami-accent-bright;
+			font-weight: 700;
+		}
+
+		:global(strong.u) {
+			text-decoration: underline;
+			text-underline-offset: 4px;
+			text-decoration-thickness: 1px;
 		}
 	}
 
@@ -418,21 +399,22 @@
 		width: 100% !important;
 		padding: 22px 24px !important;
 		margin: 0 !important;
-		border: 1.5px solid rgba($black-color, 0.22) !important;
+		border: 1px solid $dami-line !important;
 		border-radius: 0 !important;
-		color: $black-color !important;
+		color: $dami-text !important;
 		text-decoration: none;
 		background: transparent !important;
 		box-shadow: none !important;
 
 		&:hover {
-			border-color: $black-color !important;
-			background-color: $black-color !important;
-			color: #fff !important;
+			border-color: $dami-accent !important;
+			background-color: $dami-text !important;
+			color: $dami-bg !important;
+			transform: none !important;
 
 			.link-name,
 			.link-desc {
-				color: #fff !important;
+				color: $dami-bg !important;
 			}
 		}
 	}
@@ -445,20 +427,20 @@
 	.link-name {
 		font-size: 1.2rem;
 		font-weight: 700;
-		color: $black-color !important;
+		color: $dami-text !important;
 	}
 
 	.link-desc {
 		font-size: 0.88rem;
 		font-weight: 500;
-		color: rgba($black-color, 0.55) !important;
+		color: $dami-muted !important;
 	}
 
 	.specs {
 		list-style: none;
 		padding: 0;
 		margin: 0;
-		border-top: 1px solid rgba($black-color, 0.12);
+		border-top: 1px solid $dami-line;
 	}
 
 	.specs li {
@@ -466,36 +448,56 @@
 		grid-template-columns: 88px 1fr;
 		gap: 16px;
 		padding: 16px 0;
-		border-bottom: 1px solid rgba($black-color, 0.12);
+		border-bottom: 1px solid $dami-line;
 	}
 
 	.spec-key {
 		font-size: 0.78rem;
 		font-weight: 700;
-		color: rgba($black-color, 0.45);
+		color: $dami-faint;
 	}
 
 	.spec-val {
 		font-size: 0.95rem;
 		font-weight: 500;
-		color: rgba($black-color, 0.85);
+		color: $dami-text;
 	}
 
 	.exhibit {
-		display: flex;
+		display: flex !important;
+		align-items: flex-start !important;
 		gap: 18px;
-		padding: 22px 24px;
-		border: 1.5px solid rgba($black-color, 0.22);
+		padding: 22px 24px !important;
+		margin: 0 !important;
+		border: 1px solid $dami-line !important;
+		border-radius: 0 !important;
+		background: transparent !important;
+		box-shadow: none !important;
+		text-decoration: none !important;
+		text-align: left !important;
+		color: $dami-text !important;
+		transform: none !important;
+
+		&:hover {
+			border-color: $dami-accent !important;
+			background: rgba(244, 240, 234, 0.04) !important;
+			transform: none !important;
+			box-shadow: none !important;
+		}
 	}
 
 	.exhibit-year {
+		flex: 0 0 auto;
+		align-self: flex-start;
 		min-width: 56px;
+		height: fit-content;
 		padding: 8px 10px;
 		font-size: 0.85rem;
 		font-weight: 700;
-		color: #fff;
-		background: $black-color;
+		color: $dami-bg;
+		background: $dami-accent;
 		text-align: center;
+		line-height: 1.2;
 	}
 
 	.exhibit-body {
@@ -505,26 +507,28 @@
 			font-size: 1.1rem;
 			font-weight: 700;
 			background: transparent;
+			color: $dami-text;
 		}
 
 		p {
 			margin: 0;
 			font-size: 0.88rem;
-			color: rgba($black-color, 0.55);
+			color: $dami-muted;
 		}
 	}
 
 	@include mobile {
 		.content {
-			padding: 36px 20px 0;
+			padding: 12px 20px 0;
 		}
 
 		.block {
-			margin-bottom: 44px;
+			margin-bottom: 52px;
 		}
 
 		.tags-block {
-			gap: 36px;
+			gap: 56px;
+			padding-top: 8px;
 		}
 	}
 </style>

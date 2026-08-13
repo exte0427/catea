@@ -1,3 +1,9 @@
 [build]
 	command = "npm run build"
 	publish = "build"
+
+[dev]
+	command = "npm run dev -- --host 127.0.0.1 --port 5173"
+	targetPort = 5173
+	framework = "#custom"
+	autoLaunch = false

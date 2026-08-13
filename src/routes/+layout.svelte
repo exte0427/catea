@@ -9,9 +9,9 @@
 	$: hideFooter = isHome || isDami || $page.url.pathname.startsWith('/posts');
 </script>
 
-<div class="app">
+<div class="app" class:app--dami={isDami}>
 	<main>
-		<div id="article" class:full-bleed={isHome || isDami}>
+		<div id="article" class:full-bleed={isHome || isDami} class:dami-bleed={isDami}>
 			<slot />
 		</div>
 
@@ -31,6 +31,11 @@
 		min-height: 100vh;
 		display: flex;
 		flex-direction: column;
+	}
+
+	.app--dami,
+	#article.dami-bleed {
+		background: #161412;
 	}
 
 	main {

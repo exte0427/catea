@@ -4,6 +4,8 @@
 	import { page } from '$app/stores';
 	import Move from '$lib/sources/Move.svelte';
 
+	$: isDami = $page.url.pathname.startsWith('/dami');
+
 	let mainOnBlue = false;
 	let damiOnBlue = false;
 	let postsOnBlue = false;
@@ -52,9 +54,9 @@
 <header>
 	<nav id="moveSector">
 		<ul>
-			<li data-nav="main"><Move to="/" name="메인" onBlue={mainOnBlue} /></li>
-			<li data-nav="dami"><Move to="/dami/" name="DAMI" onBlue={damiOnBlue} /></li>
-			<li data-nav="posts"><Move to="/posts/" name="글" onBlue={postsOnBlue} /></li>
+			<li data-nav="main"><Move to="/" name="메인" onBlue={mainOnBlue} onDark={isDami} /></li>
+			<li data-nav="dami"><Move to="/dami/" name="DAMI" onBlue={damiOnBlue} onDark={isDami} /></li>
+			<li data-nav="posts"><Move to="/posts/" name="글" onBlue={postsOnBlue} onDark={isDami} /></li>
 		</ul>
 	</nav>
 </header>

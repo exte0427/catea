@@ -195,7 +195,7 @@
 </div>
 
 <style lang="scss">
-	@import '../../../../lib/scss/variable.scss';
+	@import '../../../../lib/scss/dami.scss';
 
 	.content {
 		max-width: 960px;
@@ -328,7 +328,7 @@
 
 		&:hover:not(:disabled) {
 			background: $black-color;
-			color: #fff;
+			color: $white-color;
 		}
 
 		&:disabled {
@@ -338,7 +338,7 @@
 
 	.action-btn--primary {
 		background: $black-color;
-		color: #fff;
+		color: $white-color;
 		border-color: $black-color;
 	}
 

@@ -1219,7 +1219,7 @@
 {/if}
 
 <style lang="scss">
-	@import '../../../lib/scss/variable.scss';
+	@import '../../../lib/scss/dami.scss';
 
 	.analyze {
 		max-width: 1180px;
