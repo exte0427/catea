@@ -2,6 +2,7 @@
 	import Loading from './../../lib/sources/Loading.svelte';
 	import PostCard from '$lib/sources/PostCard.svelte';
 	import BusinessCardMaker from '$lib/sources/BusinessCardMaker.svelte';
+	import WordCloudMaker from '$lib/sources/WordCloudMaker.svelte';
 	import { Server } from '../../lib/modules/firebase';
 	import { categoryLabels } from '../../lib/modules/categoryLabels';
 	import { beforeUpdate } from 'svelte';
@@ -64,6 +65,7 @@
 	</div>
 
 	<BusinessCardMaker />
+	<WordCloudMaker />
 </div>
 
 <style lang="scss">

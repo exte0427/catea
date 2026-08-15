@@ -1,4 +1,5 @@
 ﻿<script lang="ts">
+	import { onDestroy, onMount } from 'svelte';
 	import { fly } from 'svelte/transition';
 	import { cubicOut } from 'svelte/easing';
 	import shot1 from '$lib/images/1.png?url';
@@ -13,6 +14,18 @@
 			href: '#',
 			desc: 'Steam 페이지에서 DAMI를 만나보세요',
 			disabled: true
+		},
+		{
+			name: 'STOVE',
+			href: 'https://store.onstove.com/ko/games/105250',
+			desc: 'STOVE에서 DAMI를 만나보세요',
+			disabled: false
+		},
+		{
+			name: 'X',
+			href: 'https://x.com/saturationcatea',
+			desc: '제작 소식을 확인하세요',
+			disabled: false
 		},
 		{
 			name: 'BIC',
@@ -31,7 +44,7 @@
 	const tags = [
 		{
 			tag: '# 일촉즉발',
-			html: '모든 대상은 <strong class="u">두 번 타격당하면 끝입니다</strong>. 유예는 없습니다. 제한된 행동력 속, 모든 선택이 치명적으로 작용하는 <strong>일촉즉발의 상황</strong>에서 나아갈 수 있을까요'
+			html: '모든 대상은 <strong>두 번 타격당하면 끝입니다</strong>. 유예는 없습니다. 제한된 행동력 속, 모든 선택이 치명적으로 작용하는 <strong>일촉즉발의 상황</strong>에서 나아갈 수 있을까요'
 		},
 		{
 			tag: '# 포스트 아포칼립스',
@@ -62,6 +75,45 @@
 	let dragStartX: number | null = null;
 	let dragDelta = 0;
 	let dragging = false;
+	let revealed = tags.map(() => false);
+	let tagsEl: HTMLElement | null = null;
+	let observer: IntersectionObserver | null = null;
+	let galleryReady = false;
+	const played = new WeakSet<Element>();
+
+	const steepSigmoid = (t: number, k = 18) => {
+		const logistic = (x: number) => 1 / (1 + Math.exp(-k * (x - 0.5)));
+		const a = logistic(0);
+		const b = logistic(1);
+		return (logistic(t) - a) / (b - a);
+	};
+
+	const riseFrames = (from: number, peak: number) => {
+		const frames: Keyframe[] = [];
+		const steps = 20;
+		for (let i = 0; i <= steps; i++) {
+			const t = i / steps;
+			const s = steepSigmoid(t, 18);
+			frames.push({
+				transform: `translateY(${from * (1 - s) + peak * Math.sin(Math.PI * s)}px)`,
+				opacity: Math.min(1, s * 2.8),
+				offset: t
+			});
+		}
+		return frames;
+	};
+
+	const waitFrame = () => new Promise<void>((resolve) => requestAnimationFrame(() => resolve()));
+
+	const playTag = (root: Element, index: number) => {
+		if (played.has(root)) return;
+		played.add(root);
+		const heading = root.querySelector('h2');
+		const body = root.querySelector('p');
+		const motion = { easing: 'linear', fill: 'forwards' as const };
+		heading?.animate(riseFrames(56, -46), { ...motion, duration: 920, delay: index * 70 });
+		body?.animate(riseFrames(44, -36), { ...motion, duration: 1080, delay: index * 70 + 70 });
+	};
 
 	const wrap = (index: number) => {
 		const len = mediaItems.length;
@@ -90,27 +142,84 @@
 	};
 
 	const onPointerDown = (event: PointerEvent) => {
+		if ((event.target as HTMLElement | null)?.closest?.('iframe')) return;
 		dragging = true;
 		dragStartX = event.clientX;
 		dragDelta = 0;
-		(event.currentTarget as HTMLElement).setPointerCapture(event.pointerId);
 	};
 
 	const onPointerMove = (event: PointerEvent) => {
 		if (!dragging || dragStartX === null) return;
 		dragDelta = event.clientX - dragStartX;
+		if (Math.abs(dragDelta) > 10) {
+			(event.currentTarget as HTMLElement).setPointerCapture?.(event.pointerId);
+		}
 	};
 
 	const onPointerUp = (event: PointerEvent) => {
 		if (!dragging) return;
 		dragging = false;
-		(event.currentTarget as HTMLElement).releasePointerCapture(event.pointerId);
+		try {
+			(event.currentTarget as HTMLElement).releasePointerCapture(event.pointerId);
+		} catch {
+			// not captured
+		}
 		const threshold = 48;
 		if (dragDelta > threshold) goPrev();
 		else if (dragDelta < -threshold) goNext();
 		dragStartX = null;
 		dragDelta = 0;
 	};
+
+	onMount(() => {
+		let cancelled = false;
+
+		const start = async () => {
+			galleryReady = true;
+			if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+				revealed = tags.map(() => true);
+				return;
+			}
+
+			try {
+				await document.fonts.load('400 1.6rem PartialSansKR');
+				await document.fonts.ready;
+			} catch {
+				// keep going with fallback
+			}
+			if (cancelled) return;
+			await waitFrame();
+			await waitFrame();
+			await new Promise((resolve) => setTimeout(resolve, 480));
+			if (cancelled) return;
+
+			observer = new IntersectionObserver(
+				(entries) => {
+					for (const entry of entries) {
+						if (!entry.isIntersecting) continue;
+						const index = Number((entry.target as HTMLElement).dataset.index);
+						if (Number.isNaN(index) || revealed[index]) continue;
+						revealed[index] = true;
+						revealed = revealed;
+						playTag(entry.target, index);
+						observer?.unobserve(entry.target);
+					}
+				},
+				{ threshold: 0.22, rootMargin: '0px 0px -8% 0px' }
+			);
+
+			tagsEl?.querySelectorAll('.tag-item').forEach((el) => observer?.observe(el));
+		};
+
+		void start();
+		return () => {
+			cancelled = true;
+		};
+	});
+
+	onDestroy(() => {
+		observer?.disconnect();
+	});
 </script>
 
 <svelte:head>
@@ -130,25 +239,27 @@
 			role="region"
 		>
 			<div class="slide-frame">
-				{#key active}
-					<div
-						class="slide-media"
-						in:fly={{ x: dir * 56, duration: 480, opacity: 0, easing: cubicOut }}
-						out:fly={{ x: dir * -56, duration: 360, opacity: 0, easing: cubicOut }}
-					>
-						{#if activeItem.type === 'video'}
-							<iframe
-								src="{activeItem.src}?rel=0"
-								title={activeItem.label}
-								frameborder="0"
-								allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-								allowfullscreen
-							></iframe>
-						{:else}
-							<img src={activeItem.src} alt={activeItem.label} draggable="false" />
-						{/if}
-					</div>
-				{/key}
+				{#if galleryReady}
+					{#key active}
+						<div
+							class="slide-media"
+							in:fly={{ x: dir * 56, duration: 480, opacity: 0, easing: cubicOut }}
+							out:fly={{ x: dir * -56, duration: 360, opacity: 0, easing: cubicOut }}
+						>
+							{#if activeItem.type === 'video'}
+								<iframe
+									src="{activeItem.src}?rel=0"
+									title={activeItem.label}
+									frameborder="0"
+									allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+									allowfullscreen
+								></iframe>
+							{:else}
+								<img src={activeItem.src} alt={activeItem.label} draggable="false" />
+							{/if}
+						</div>
+					{/key}
+				{/if}
 			</div>
 		</div>
 
@@ -169,9 +280,9 @@
 		</div>
 	</section>
 
-	<section class="block tags-block">
-		{#each tags as item}
-			<article class="tag-item">
+	<section class="block tags-block" bind:this={tagsEl}>
+		{#each tags as item, i}
+			<article class="tag-item" data-index={i}>
 				<h2>{item.tag}</h2>
 				<p>{@html item.html}</p>
 			</article>
@@ -345,10 +456,17 @@
 		display: flex;
 		flex-direction: column;
 		gap: 48px;
-		padding: 8px 0 4px;
+		padding: 28px 0 4px;
+		overflow: visible;
 	}
 
 	.tag-item {
+		h2,
+		p {
+			opacity: 0;
+			will-change: transform, opacity;
+		}
+
 		h2 {
 			margin: 0 0 12px;
 			font-family: 'PartialSansKR', 'GMarketSans', sans-serif;
@@ -357,6 +475,7 @@
 			color: $dami-text;
 			letter-spacing: -0.03em;
 			line-height: 1.05;
+			transform: translateY(56px);
 		}
 
 		p {
@@ -367,6 +486,7 @@
 			line-height: 1.9;
 			letter-spacing: -0.02em;
 			color: rgba(244, 240, 234, 0.88);
+			transform: translateY(44px);
 		}
 
 		:global(strong) {
@@ -374,11 +494,13 @@
 			color: $dami-accent-bright;
 			font-weight: 700;
 		}
+	}
 
-		:global(strong.u) {
-			text-decoration: underline;
-			text-underline-offset: 4px;
-			text-decoration-thickness: 1px;
+	@media (prefers-reduced-motion: reduce) {
+		.tag-item h2,
+		.tag-item p {
+			opacity: 1;
+			transform: none;
 		}
 	}
 
@@ -528,7 +650,7 @@
 
 		.tags-block {
 			gap: 56px;
-			padding-top: 8px;
+			padding-top: 24px;
 		}
 	}
 </style>

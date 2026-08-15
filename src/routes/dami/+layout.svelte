@@ -74,6 +74,13 @@
 
 <svelte:head>
 	<link
+		rel="preload"
+		href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2307-1@1.1/PartialSansKR-Regular.woff2"
+		as="font"
+		type="font/woff2"
+		crossorigin="anonymous"
+	/>
+	<link
 		rel="stylesheet"
 		href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
 	/>
@@ -122,8 +129,7 @@
 			in:fly={{ y: 12, duration: 560, opacity: 0, easing: cubicOut }}
 			out:fade={{ duration: 220, easing: cubicOut }}
 		>
-			<p>기형화된 생태계의 <strong>식어버린 포스트아포칼립스의</strong> 세상에서 희망은 있을까요?</p>
-			<p><strong>일촉즉발</strong>, 과감한 액션의 탑뷰 어드벤처 게임 다미입니다.</p>
+			<p>사소했던, 문명의 마지막 연대기 - 액션 어드벤쳐 게임 <strong>《다미》</strong></p>
 		</div>
 	{/if}
 
@@ -323,7 +329,7 @@
 	}
 
 	.hero-copy {
-		max-width: 640px;
+		max-width: 720px;
 		margin: 0 auto 8px;
 		padding: 0 24px 20px;
 		display: flex;
@@ -333,7 +339,7 @@
 
 		p {
 			margin: 0;
-			font-size: clamp(0.95rem, 2.2vw, 1.12rem);
+			font-size: clamp(0.92rem, 2.1vw, 1.08rem);
 			font-weight: 500;
 			line-height: 1.85;
 			letter-spacing: -0.02em;
